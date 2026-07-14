@@ -1,0 +1,53 @@
+# render.yaml — deploy this portfolio on Render (free tier).
+# ------------------------------------------------------------
+# Vercel is the recommended host (zero-config for Next.js), but
+# this Blueprint lets the same repo run on Render too. Push to
+# GitHub, then New → Blueprint on render.com and point it here.
+#
+# Set the environment variables (marked sync:false) in the
+# Render dashboard after the first deploy — see
+# docs/ENVIRONMENT_VARIABLES.md for what each one does.
+services:
+  - type: web
+    name: thiru-portfolio
+    runtime: node
+    plan: free
+    region: singapore # closest free region to India; move near your DB
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: CONTACT_RECEIVER_EMAIL
+        sync: false
+      - key: WEB3FORMS_ACCESS_KEY
+        sync: false
+      - key: NEXT_PUBLIC_GA_MEASUREMENT_ID
+        sync: false

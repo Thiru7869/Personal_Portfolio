@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="Georgia, 'Times New Roman', serif">
+  <rect width="800" height="500" fill="#f8f7f2"/>
+  <rect x="18" y="18" width="764" height="464" fill="none" stroke="#9a3412" stroke-width="3"/>
+  <rect x="28" y="28" width="744" height="444" fill="none" stroke="#9a3412" stroke-width="1" opacity="0.5"/>
+  <text x="400" y="92" text-anchor="middle" font-size="16" letter-spacing="6" fill="#666">CERTIFICATE</text>
+  <line x1="280" y1="112" x2="520" y2="112" stroke="#9a3412" stroke-width="1.5"/>
+  <text x="400" y="170" text-anchor="middle" font-size="14" fill="#777">This certifies that</text>
+  <text x="400" y="215" text-anchor="middle" font-size="30" font-style="italic" fill="#222">Thirumala Narasimha Poluru</text>
+  <text x="400" y="258" text-anchor="middle" font-size="14" fill="#777">has been awarded</text>
+  <text x="400" y="300" text-anchor="middle" font-size="24" font-weight="bold" fill="#9a3412">Database & SQL</text>
+  <text x="400" y="332" text-anchor="middle" font-size="24" font-weight="bold" fill="#9a3412">Certification</text>
+  <text x="400" y="390" text-anchor="middle" font-size="14" fill="#444">Certificate of Completion</text>
+  <text x="400" y="415" text-anchor="middle" font-size="13" fill="#888">2025</text>
+  <circle cx="700" cy="410" r="34" fill="none" stroke="#9a3412" stroke-width="2"/>
+  <circle cx="700" cy="410" r="27" fill="none" stroke="#9a3412" stroke-width="1" opacity="0.6"/>
+  <text x="700" y="415" text-anchor="middle" font-size="10" letter-spacing="1" fill="#9a3412">VERIFIED</text>
+</svg>

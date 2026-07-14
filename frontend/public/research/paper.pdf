@@ -1,0 +1,64 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 2625 >>
+stream
+BT /F2 15 Tf 56 762.0 Td (Innovative Deep Learning Approaches for ECG-Based) Tj ET
+BT /F2 15 Tf 56 738.8 Td (Cardiovascular Disease Detection) Tj ET
+BT /F1 10.5 Tf 56 730.8 Td () Tj ET
+BT /F1 10 Tf 56 715.3 Td (Thirumala Narasimha Poluru, et al.) Tj ET
+BT /F1 9 Tf 56 701.3 Td (International Journal of Novel Research and Development \(IJNRD\), 2025) Tj ET
+BT /F1 10.5 Tf 56 689.3 Td () Tj ET
+BT /F2 11 Tf 56 665.3 Td (ABSTRACT) Tj ET
+BT /F1 10.5 Tf 56 649.0 Td (Cardiovascular disease remains the leading cause of death worldwide, and early detection from) Tj ET
+BT /F1 10.5 Tf 56 632.8 Td (electrocardiogram \(ECG\) signals is one of the most practical paths to reducing that toll. This) Tj ET
+BT /F1 10.5 Tf 56 616.5 Td (work explores deep learning architectures for classifying cardiovascular conditions directly) Tj ET
+BT /F1 10.5 Tf 56 600.2 Td (from ECG signals, comparing convolutional and recurrent approaches on preprocessed signal) Tj ET
+BT /F1 10.5 Tf 56 583.9 Td (data. We address the practical problems that keep such models out of clinics - noisy) Tj ET
+BT /F1 10.5 Tf 56 567.7 Td (real-world signals, class imbalance across rarer conditions, and the gap between benchmark) Tj ET
+BT /F1 10.5 Tf 56 551.4 Td (accuracy and dependable behaviour on unseen patients - using signal preprocessing,) Tj ET
+BT /F1 10.5 Tf 56 535.1 Td (augmentation, and careful evaluation protocols. The approach achieves strong classification) Tj ET
+BT /F1 10.5 Tf 56 518.8 Td (performance while remaining computationally light enough for modest hardware.) Tj ET
+BT /F1 10.5 Tf 56 506.8 Td () Tj ET
+BT /F2 11 Tf 56 482.8 Td (KEY CONTRIBUTIONS) Tj ET
+BT /F1 10.5 Tf 56 466.6 Td (1. A preprocessing and augmentation pipeline robust to noisy, real-world ECG signals.) Tj ET
+BT /F1 10.5 Tf 56 450.3 Td (2. A comparative evaluation of CNN and recurrent architectures for multi-class detection.) Tj ET
+BT /F1 10.5 Tf 56 434.0 Td (3. Class-imbalance handling so rarer conditions are not drowned out by common ones.) Tj ET
+BT /F1 10.5 Tf 56 417.7 Td (4. A deployment-conscious design keeping inference practical on modest hardware.) Tj ET
+BT /F1 10.5 Tf 56 405.7 Td () Tj ET
+BT /F2 11 Tf 56 381.7 Td (KEYWORDS) Tj ET
+BT /F1 10.5 Tf 56 365.5 Td (Deep Learning, ECG Classification, Cardiovascular Disease, Signal Processing, ML in Healthcare) Tj ET
+BT /F1 10.5 Tf 56 353.5 Td () Tj ET
+BT /F2 11 Tf 56 329.5 Td (NOTE) Tj ET
+BT /F1 10.5 Tf 56 313.2 Td (This file is a summary sheet generated for the portfolio. Replace it with the full published) Tj ET
+BT /F1 10.5 Tf 56 296.9 Td (PDF at frontend/public/research/paper.pdf when convenient.) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000321 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3072
+%%EOF

@@ -1,0 +1,31 @@
+# Dependabot — weekly dependency + GitHub Actions updates.
+# Grouped so a single PR carries related bumps instead of noise.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Framework + types move together.
+      next-react:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+      # Dev/test tooling in one PR.
+      tooling:
+        patterns:
+          - "vitest"
+          - "@vitejs/*"
+          - "@testing-library/*"
+          - "@playwright/*"
+          - "eslint*"
+          - "typescript"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

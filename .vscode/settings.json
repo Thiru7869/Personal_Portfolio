@@ -1,0 +1,18 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "typescript.tsdk": "frontend/node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "eslint.workingDirectories": ["frontend"],
+  "tailwindCSS.experimental.configFile": "frontend/tailwind.config.ts",
+  "files.exclude": {
+    "**/.next": true,
+    "**/node_modules": true
+  },
+  "search.exclude": {
+    "**/package-lock.json": true
+  }
+}

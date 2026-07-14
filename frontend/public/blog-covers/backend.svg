@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="ui-monospace, monospace">
+  <rect width="1200" height="630" fill="#06231a"/>
+  <circle cx="1050" cy="90" r="300" fill="#34d399" opacity="0.08"/>
+  <circle cx="120" cy="560" r="240" fill="#34d399" opacity="0.06"/>
+  <g stroke="#34d399" stroke-width="1" opacity="0.14">
+    <line x1="0" y1="0" x2="0" y2="630"/><line x1="110" y1="0" x2="110" y2="630"/><line x1="220" y1="0" x2="220" y2="630"/><line x1="330" y1="0" x2="330" y2="630"/><line x1="440" y1="0" x2="440" y2="630"/><line x1="550" y1="0" x2="550" y2="630"/><line x1="660" y1="0" x2="660" y2="630"/><line x1="770" y1="0" x2="770" y2="630"/><line x1="880" y1="0" x2="880" y2="630"/><line x1="990" y1="0" x2="990" y2="630"/><line x1="1100" y1="0" x2="1100" y2="630"/><line x1="1210" y1="0" x2="1210" y2="630"/>
+  </g>
+  <text x="80" y="120" font-size="26" fill="#34d399" opacity="0.85">thiru@blog:~$ cat backend.md</text>
+  <text x="80" y="360" font-size="72" font-weight="bold" fill="#34d399">Backend</text>
+  <text x="80" y="420" font-size="26" fill="#34d399" opacity="0.6">notes from building real things</text>
+  <rect x="80" y="480" width="64" height="6" fill="#34d399"/>
+</svg>

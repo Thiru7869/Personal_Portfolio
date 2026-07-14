@@ -1,0 +1,643 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   EXPERIENCE ENGINE — two independent axes
+   ------------------------------------------------------------
+   data-appearance = light | dark        (sun/moon toggle)
+   data-mode       = professional | terminal | ai | developer
+                     | executive         (mode switcher)
+
+   Appearance owns the luminance scale; modes override structure
+   (fonts, radii, spacing) and accent hues. Tailwind's scales
+   (rounded-*, font-*, shadow-*) read these variables, so every
+   combination reskins the whole site with zero component
+   conditionals. Takeover modes (terminal/ai/developer) replace
+   the page via ThemeShell; their chrome uses these tokens too.
+
+   Colors are space-separated RGB consumed as rgb(var(--c-x)/a).
+   ============================================================ */
+
+/* ---------- Appearance: LIGHT (default) ---------- */
+:root,
+[data-appearance="light"] {
+  --c-bg: 255 255 255;
+  --c-surface: 246 248 250;
+  --c-card: 255 255 255;
+  --c-line: 225 228 232;
+  --c-ink: 17 20 24;
+  --c-mute: 87 96 106;
+  --c-brand: 37 99 235; /* blue */
+  --c-brand2: 18 135 61; /* green — darkened from 22/163/74 for AA text contrast on white (4.6:1) */
+  --c-term-bg: 13 17 23;
+  --c-term-ink: 201 245 210;
+  --c-term-accent: 34 197 94;
+
+  /* Cursor glow accent — overridden per-section by CustomCursor via JS;
+     defaults to the active brand color so it never looks unstyled. */
+  --c-cursor-accent: var(--c-brand);
+
+  --ff-body: var(--font-sans);
+  --ff-head: var(--font-sans);
+  --track-head: -0.03em;
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --border-w: 1px;
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.05), 0 8px 24px -12px rgb(16 24 40 / 0.1);
+  --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.2), 0 8px 28px -8px rgb(var(--c-brand) / 0.22);
+  --section-pad: 6.5rem;
+  color-scheme: light;
+}
+
+/* ---------- Appearance: DARK ---------- */
+[data-appearance="dark"] {
+  --c-bg: 9 10 12;
+  --c-surface: 16 18 21;
+  --c-card: 20 22 26;
+  --c-line: 41 44 51;
+  --c-ink: 243 244 246;
+  --c-mute: 152 158 168;
+  --c-brand: 96 165 250;
+  --c-brand2: 74 222 128;
+  --c-term-bg: 4 7 5;
+  --c-term-ink: 178 255 190;
+  --c-term-accent: 0 255 65;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.28), 0 8px 32px -8px rgb(var(--c-brand) / 0.28);
+  color-scheme: dark;
+}
+
+/* ---------- Mode: TERMINAL (desktop chrome tokens) ---------- */
+[data-mode="terminal"] {
+  --ff-body: var(--font-mono);
+  --ff-head: var(--font-mono);
+  --track-head: 0em;
+  --r-sm: 2px;
+  --r-md: 4px;
+  --r-lg: 6px;
+  --r-xl: 8px;
+  --section-pad: 4.5rem;
+}
+[data-mode="terminal"][data-appearance="light"] {
+  --c-bg: 222 226 230;
+  --c-surface: 235 238 241;
+  --c-card: 245 247 249;
+  --c-line: 190 196 203;
+  --c-brand: 19 116 56; /* darkened from 21/128/61 for AA text contrast (4.5:1) */
+  --c-brand2: 29 78 216;
+}
+[data-mode="terminal"][data-appearance="dark"] {
+  --c-bg: 6 10 8;
+  --c-surface: 11 17 13;
+  --c-card: 13 20 15;
+  --c-line: 31 61 40;
+  --c-ink: 190 245 200;
+  --c-mute: 106 168 120;
+  --c-brand: 0 255 65;
+  --c-brand2: 74 222 128;
+}
+
+/* ---------- Mode: AI WORKSPACE ---------- */
+[data-mode="ai"] {
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 30px;
+}
+[data-mode="ai"][data-appearance="light"] {
+  --c-bg: 248 249 252;
+  --c-surface: 240 243 248;
+  --c-brand: 107 92 236; /* darkened slightly from 109/94/241 for AA text contrast (4.6:1) */
+  --c-brand2: 13 130 102; /* darkened from 16/163/127 for AA text contrast (4.5:1) */
+}
+[data-mode="ai"][data-appearance="dark"] {
+  --c-brand: 148 134 255;
+  --c-brand2: 52 211 153;
+}
+
+/* ---------- Mode: DEVELOPER DASHBOARD ---------- */
+[data-mode="developer"] {
+  --ff-head: var(--font-mono);
+  --track-head: -0.01em;
+  --r-sm: 6px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 10px;
+  --shadow-card: 0 0 transparent;
+}
+[data-mode="developer"][data-appearance="light"] {
+  --c-bg: 255 255 255;
+  --c-surface: 246 248 250;
+  --c-line: 208 215 222;
+  --c-brand: 9 105 218;
+  --c-brand2: 26 127 55;
+}
+[data-mode="developer"][data-appearance="dark"] {
+  --c-bg: 13 17 23;
+  --c-surface: 22 27 34;
+  --c-card: 22 27 34;
+  --c-line: 48 54 61;
+  --c-ink: 230 237 243;
+  --c-mute: 125 133 144;
+  --c-brand: 88 166 255;
+  --c-brand2: 63 185 80;
+}
+
+/* ---------- Mode: EXECUTIVE ---------- */
+/* Warm ivory · graphite · forest green · champagne gold. Deliberately
+   neon-free — natural shadows and a print-ready, presentation palette. */
+[data-mode="executive"] {
+  --ff-head: var(--font-serif);
+  --track-head: -0.015em;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-xl: 12px;
+  --section-pad: 8rem;
+}
+[data-mode="executive"][data-appearance="light"] {
+  --c-bg: 250 248 243; /* warm ivory */
+  --c-surface: 244 240 231; /* warm paper */
+  --c-card: 255 254 250;
+  --c-line: 224 216 199; /* soft warm rule */
+  --c-ink: 41 38 34; /* graphite */
+  --c-mute: 111 103 91;
+  --c-brand: 140 108 52; /* bronze gold — darkened from the initial pick for AA contrast on ivory (4.6:1) */
+  --c-brand2: 40 88 66; /* forest green */
+  --shadow-card: 0 1px 2px rgb(64 52 28 / 0.06), 0 10px 28px -14px rgb(64 52 28 / 0.16);
+  --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.16), 0 10px 26px -10px rgb(var(--c-brand) / 0.18);
+}
+[data-mode="executive"][data-appearance="dark"] {
+  --c-bg: 23 21 18; /* graphite ink */
+  --c-surface: 30 27 23;
+  --c-card: 35 32 27;
+  --c-line: 60 54 45;
+  --c-ink: 237 230 216; /* warm ivory */
+  --c-mute: 171 161 144;
+  --c-brand: 205 172 108; /* champagne gold */
+  --c-brand2: 97 148 118; /* forest green */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px -14px rgb(0 0 0 / 0.5);
+  --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.2), 0 10px 30px -10px rgb(var(--c-brand) / 0.2);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+* {
+  border-color: rgb(var(--c-line) / 0.8);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-ink));
+  font-family: var(--ff-body), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  letter-spacing: var(--track-head);
+}
+
+/* Smooth full-page morph while switching mode/appearance */
+html.theme-switching body,
+html.theme-switching body * {
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease,
+    border-color 0.5s ease,
+    border-radius 0.5s ease,
+    box-shadow 0.5s ease !important;
+}
+
+::selection {
+  background: rgb(var(--c-brand) / 0.25);
+  color: rgb(var(--c-ink));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--c-surface));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--c-brand) / 0.35);
+  border-radius: 999px;
+  border: 2px solid rgb(var(--c-surface));
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--c-brand) / 0.6);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--c-brand) / 0.4) rgb(var(--c-surface));
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--c-brand));
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+/* ============================================================
+   COMPONENTS — geometry and depth come from tokens
+   ============================================================ */
+
+@layer components {
+  .section-shell {
+    @apply relative z-[1] mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  /* position: relative gives SectionBackdrop (z-index 0) a
+     containing block so it sits behind .section-shell content
+     (z-index 1) without every section needing its own CSS. */
+  .section-pad {
+    position: relative;
+    padding-block: var(--section-pad);
+  }
+
+  .card-shell {
+    background-color: rgb(var(--c-card));
+    border: var(--border-w) solid rgb(var(--c-line) / 0.8);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-card);
+    /* Base fallback so every card-shell hover animates smoothly —
+       including the mode-scoped :hover rules below, which have no
+       Tailwind transition utility of their own. Components that add
+       their own transition-all utility simply override this. */
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-mute;
+    background-color: rgb(var(--c-surface) / 0.9);
+    border: var(--border-w) solid rgb(var(--c-line) / 0.9);
+    border-radius: 999px;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 active:scale-[0.98];
+    background-color: rgb(var(--c-brand));
+    color: rgb(var(--c-bg));
+    border-radius: var(--r-md);
+  }
+  .btn-primary:hover {
+    box-shadow: var(--shadow-glow);
+    filter: brightness(1.05);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 active:scale-[0.98];
+    background-color: rgb(var(--c-card) / 0.8);
+    color: rgb(var(--c-ink));
+    border: var(--border-w) solid rgb(var(--c-line));
+    border-radius: var(--r-md);
+  }
+  .btn-ghost:hover {
+    border-color: rgb(var(--c-brand) / 0.6);
+    color: rgb(var(--c-brand));
+  }
+
+  .gradient-text {
+    background-image: linear-gradient(100deg, rgb(var(--c-brand)), rgb(var(--c-brand2)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Glass surfaces (nav on scroll, action dock) */
+  .glass {
+    background-color: rgb(var(--c-bg) / 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+}
+
+/* Terminal mode: square chips, CLI-flavoured buttons */
+[data-mode="terminal"] .chip {
+  border-radius: var(--r-sm);
+}
+[data-mode="terminal"] .btn-primary::before {
+  content: "$ ";
+  opacity: 0.7;
+}
+[data-mode="terminal"] .btn-ghost::before {
+  content: "> ";
+  opacity: 0.6;
+}
+
+/* Developer mode: editor-style top border accent on cards */
+[data-mode="developer"] .card-shell {
+  border-top: 2px solid rgb(var(--c-line));
+}
+[data-mode="developer"] .card-shell:hover {
+  border-top-color: rgb(var(--c-brand));
+}
+
+/* Executive mode: presentation focus — hide playful chrome */
+[data-mode="executive"] .exec-hide {
+  display: none !important;
+}
+[data-mode="executive"] h1,
+[data-mode="executive"] h2,
+[data-mode="executive"] h3 {
+  font-weight: 600;
+}
+
+/* ============================================================
+   LONG-FORM MARKDOWN (blog posts, Q&A answers)
+   ============================================================ */
+
+.prose-portfolio {
+  color: rgb(var(--c-ink) / 0.92);
+  font-size: 0.975rem;
+  line-height: 1.85;
+}
+.prose-portfolio > * + * {
+  margin-top: 1rem;
+}
+.prose-portfolio h2,
+.prose-portfolio h3 {
+  font-family: var(--ff-head), sans-serif;
+  font-weight: 700;
+  color: rgb(var(--c-ink));
+  margin-top: 1.85rem;
+  letter-spacing: var(--track-head);
+}
+.prose-portfolio h2 {
+  font-size: 1.35rem;
+}
+.prose-portfolio h3 {
+  font-size: 1.1rem;
+}
+.prose-portfolio strong {
+  color: rgb(var(--c-ink));
+  font-weight: 650;
+}
+.prose-portfolio a {
+  color: rgb(var(--c-brand));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-portfolio ul,
+.prose-portfolio ol {
+  padding-left: 1.4rem;
+}
+.prose-portfolio ul {
+  list-style: disc;
+}
+.prose-portfolio ol {
+  list-style: decimal;
+}
+.prose-portfolio li::marker {
+  color: rgb(var(--c-brand));
+}
+.prose-portfolio li + li {
+  margin-top: 0.35rem;
+}
+.prose-portfolio blockquote {
+  border-left: 3px solid rgb(var(--c-brand));
+  padding-left: 1rem;
+  color: rgb(var(--c-mute));
+  font-style: italic;
+}
+.prose-portfolio code {
+  background: rgb(var(--c-surface));
+  border: 1px solid rgb(var(--c-line) / 0.8);
+  border-radius: 5px;
+  padding: 0.1em 0.4em;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85em;
+}
+.prose-portfolio pre {
+  background: rgb(var(--c-term-bg));
+  border: 1px solid rgb(var(--c-line) / 0.6);
+  border-radius: var(--r-md);
+  padding: 1rem;
+  overflow-x: auto;
+}
+.prose-portfolio pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: rgb(var(--c-term-ink));
+}
+
+/* Markdown inside the AI assistant bubble */
+.chat-markdown > * + * {
+  margin-top: 0.5rem;
+}
+.chat-markdown ul,
+.chat-markdown ol {
+  padding-left: 1.1rem;
+}
+.chat-markdown ul {
+  list-style: disc;
+}
+.chat-markdown ol {
+  list-style: decimal;
+}
+.chat-markdown li + li {
+  margin-top: 0.2rem;
+}
+.chat-markdown strong {
+  color: rgb(var(--c-brand));
+}
+.chat-markdown a {
+  color: rgb(var(--c-brand2));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.chat-markdown code {
+  background: rgb(var(--c-surface));
+  border: 1px solid rgb(var(--c-line) / 0.8);
+  border-radius: 5px;
+  padding: 0.1em 0.35em;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.85em;
+}
+.chat-markdown pre {
+  background: rgb(var(--c-term-bg));
+  border: 1px solid rgb(var(--c-line) / 0.6);
+  border-radius: var(--r-md);
+  padding: 0.75rem;
+  overflow-x: auto;
+}
+.chat-markdown pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: rgb(var(--c-term-ink));
+}
+
+/* ============================================================
+   EFFECTS
+   ============================================================ */
+
+.skeleton {
+  background: linear-gradient(
+    100deg,
+    rgb(var(--c-surface)) 40%,
+    rgb(var(--c-line) / 0.6) 50%,
+    rgb(var(--c-surface)) 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: var(--r-md);
+}
+
+.term-caret::after {
+  content: "▊";
+  color: rgb(var(--c-term-accent));
+  animation: blink 1.06s step-end infinite;
+}
+
+/* Minimal cursor dot (CustomCursor component) */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: rgb(var(--c-cursor-accent));
+  pointer-events: none;
+  transition:
+    transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1),
+    opacity 0.25s ease,
+    background-color 0.4s ease;
+}
+
+/* Soft, slower-trailing glow halo — tinted per-section (CustomCursor) */
+.cursor-halo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 119;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--c-cursor-accent) / 0.32), transparent 72%);
+  filter: blur(1px);
+  pointer-events: none;
+  transition: opacity 0.35s ease, background-color 0.4s ease;
+}
+
+/* Ambient backdrop host (AmbientBackdrop component) */
+.ambient-host {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Section-scoped backdrop host (per-section background primitives) */
+.section-backdrop-host {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Boot sequence — terminal glow text (BootSequence component) */
+.boot-text-glow {
+  text-shadow:
+    0 0 8px rgb(var(--c-term-accent) / 0.55),
+    0 0 20px rgb(var(--c-term-accent) / 0.25);
+}
+
+/* Timeline lighting backdrop (Experience section) — a light beam
+   drifting slowly down the section. */
+@keyframes timeline-sweep {
+  0%,
+  100% {
+    transform: translate(-50%, -10%);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(-50%, 60%);
+    opacity: 1;
+  }
+}
+.timeline-sweep {
+  animation: timeline-sweep 14s ease-in-out infinite;
+}
+
+/* Focus mode: hush the ambience */
+html[data-focus="true"] .ambient-host,
+html[data-focus="true"] .cursor-dot,
+html[data-focus="true"] .cursor-halo {
+  opacity: 0;
+}
+
+/* ============================================================
+   ACCESSIBILITY & PRINT
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .cursor-dot,
+  .cursor-halo {
+    display: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root,
+  [data-appearance],
+  [data-mode] {
+    --c-mute: var(--c-ink);
+  }
+  * {
+    border-color: rgb(var(--c-ink) / 0.5);
+  }
+}
+
+@media print {
+  .ambient-host,
+  .cursor-dot,
+  .cursor-halo,
+  nav,
+  footer,
+  .print-hide {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: black;
+  }
+  .section-pad {
+    padding-block: 1.5rem;
+  }
+}

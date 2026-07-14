@@ -1,0 +1,70 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 3168 >>
+stream
+BT /F2 17 Tf 56 764.0 Td (THIRUMALA NARASIMHA POLURU \(THIRU\)) Tj ET
+BT /F1 10 Tf 56 748.5 Td (Full-Stack Developer  |  AI & Data Science Enthusiast) Tj ET
+BT /F1 9 Tf 56 734.5 Td (Bengaluru, India  ·  +91 93926 13828  ·  reddytn4@gmail.com) Tj ET
+BT /F1 9 Tf 56 720.6 Td (github.com/Thiru7869  ·  linkedin.com/in/poluru-thirumala-narasimha-23775926b  ·  leetcode.com/u/thiru7869) Tj ET
+BT /F1 10.5 Tf 56 710.6 Td () Tj ET
+BT /F2 12 Tf 56 684.6 Td (SUMMARY) Tj ET
+BT /F1 10.5 Tf 56 668.3 Td (Full-stack developer working with React, Next.js, TypeScript, Python, and FastAPI. Co-author of a) Tj ET
+BT /F1 10.5 Tf 56 652.0 Td (published deep learning research paper on ECG-based cardiovascular disease detection \(IJNRD\).) Tj ET
+BT /F1 10.5 Tf 56 635.8 Td (Daily Linux \(Parrot OS\) user, moving deeper into Docker, CI/CD, and cloud. Open to full-time,) Tj ET
+BT /F1 10.5 Tf 56 619.5 Td (internship, and freelance opportunities - remote or on-site.) Tj ET
+BT /F1 10.5 Tf 56 609.5 Td () Tj ET
+BT /F2 12 Tf 56 583.5 Td (PROJECTS) Tj ET
+BT /F2 10.5 Tf 56 567.2 Td (Production-Grade Full-Stack Portfolio) Tj ET
+BT /F1 10.5 Tf 56 551.0 Td (Seven-theme portfolio with terminal mode, AI assistant \(multi-provider fallback\), CMS, analytics,) Tj ET
+BT /F1 10.5 Tf 56 534.7 Td (blog engine, and FAQ system. Next.js, TypeScript, Tailwind, Supabase - Lighthouse 95+.) Tj ET
+BT /F2 10.5 Tf 56 518.4 Td (Dynamic Kalamkari E-Commerce Platform) Tj ET
+BT /F1 10.5 Tf 56 502.1 Td (Marketplace for hand-painted textiles: JWT auth, customer & admin dashboards, product management,) Tj ET
+BT /F1 10.5 Tf 56 485.9 Td (dynamic pricing, and a content-based recommendation system. Next.js, FastAPI, PostgreSQL.) Tj ET
+BT /F2 10.5 Tf 56 469.6 Td (ECG-Based Cardiovascular Disease Detection) Tj ET
+BT /F1 10.5 Tf 56 453.3 Td (Deep learning pipeline classifying cardiovascular conditions from ECG signals; noise-robust) Tj ET
+BT /F1 10.5 Tf 56 437.0 Td (preprocessing and imbalance-aware evaluation. Python, TensorFlow. Published research \(IJNRD 2025\).) Tj ET
+BT /F1 10.5 Tf 56 427.0 Td () Tj ET
+BT /F2 12 Tf 56 401.0 Td (RESEARCH) Tj ET
+BT /F2 10.5 Tf 56 384.8 Td (Innovative Deep Learning Approaches for ECG-Based Cardiovascular Disease Detection) Tj ET
+BT /F1 10.5 Tf 56 368.5 Td (International Journal of Novel Research and Development \(IJNRD\), 2025.) Tj ET
+BT /F1 10.5 Tf 56 358.5 Td () Tj ET
+BT /F2 12 Tf 56 332.5 Td (SKILLS) Tj ET
+BT /F1 10.5 Tf 56 316.2 Td (Frontend: HTML5, CSS3, JavaScript, TypeScript, React, Next.js, Tailwind CSS) Tj ET
+BT /F1 10.5 Tf 56 299.9 Td (Backend: Python, FastAPI, Node.js, REST APIs, JWT Authentication) Tj ET
+BT /F1 10.5 Tf 56 283.7 Td (Databases: PostgreSQL, MongoDB, MySQL  ·  Tools: Git, GitHub, VS Code, Docker, Postman, Figma) Tj ET
+BT /F1 10.5 Tf 56 267.4 Td (Other: Linux \(Parrot OS\), Responsive Design, SEO, Performance Optimization, AI Integration) Tj ET
+BT /F1 10.5 Tf 56 257.4 Td () Tj ET
+BT /F2 12 Tf 56 231.4 Td (EDUCATION) Tj ET
+BT /F1 10.5 Tf 56 215.1 Td (B.Tech, Computer Science & Engineering - Annamacharya Institute of Technology and Sciences,) Tj ET
+BT /F1 10.5 Tf 56 198.8 Td (Tirupati \(2021-2025\), aggregate 70%) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000321 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+3615
+%%EOF
