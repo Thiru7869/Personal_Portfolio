@@ -17,6 +17,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { trackEvent } from "@/lib/analytics";
 import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 const channelIcons = {
   github: Github,
@@ -78,7 +79,7 @@ export function Contact() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="contact"
-          title="Let's build something"
+          title="Let's Talk"
           lede="Role, project, collaboration, or a question about the research — every message lands in my inbox."
         />
 
@@ -188,14 +189,16 @@ export function Contact() {
                     </p>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={status === "sending"}
-                    className="btn-primary mt-5 w-full disabled:cursor-wait disabled:opacity-60 sm:w-auto"
-                  >
-                    <Send size={15} aria-hidden="true" />
-                    {status === "sending" ? "Sending…" : "Send message"}
-                  </button>
+                  <Magnetic strength={8} className="mt-5 block w-full sm:inline-block sm:w-auto">
+                    <button
+                      type="submit"
+                      disabled={status === "sending"}
+                      className="btn-primary w-full disabled:cursor-wait disabled:opacity-60 sm:w-auto"
+                    >
+                      <Send size={15} aria-hidden="true" />
+                      {status === "sending" ? "Sending…" : "Send message"}
+                    </button>
+                  </Magnetic>
                 </>
               )}
             </form>

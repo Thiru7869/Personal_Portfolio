@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
 
 interface InsightsData {
   totalViews: number;
@@ -135,10 +136,11 @@ export function Insights() {
 
   return (
     <section id="insights" aria-label="Portfolio insights" className="section-pad exec-hide">
+      <SectionBackdrop kind="signal" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="insights"
-          title="Portfolio Insights"
+          title="Site Stats"
           lede="This site measures itself — first-party analytics, stored in the same database you can rate it with."
         />
 

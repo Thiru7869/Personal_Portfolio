@@ -7,6 +7,10 @@ import { Blueprint } from "@/components/layout/backdrops/Blueprint";
 import { Waves } from "@/components/layout/backdrops/Waves";
 import { TimelineLighting } from "@/components/layout/backdrops/TimelineLighting";
 import { NodeCanvas } from "@/components/layout/backdrops/NodeCanvas";
+import { Paper } from "@/components/layout/backdrops/Paper";
+import { Dotted } from "@/components/layout/backdrops/Dotted";
+import { Particles } from "@/components/layout/backdrops/Particles";
+import { Signal } from "@/components/layout/backdrops/Signal";
 
 export type SectionBackdropKind =
   | "aurora"
@@ -16,15 +20,19 @@ export type SectionBackdropKind =
   | "timeline"
   | "mesh"
   | "constellation"
-  | "matrix";
+  | "matrix"
+  | "paper"
+  | "dotted"
+  | "particles"
+  | "signal";
 
 /**
  * SectionBackdrop — gives one section its own subtle visual
- * identity (spec: Hero=aurora, Projects=blueprint, Skills=neural
- * mesh, Experience=timeline lighting, Contact=constellation; the
- * remaining sections cycle the calmer static primitives so no two
- * adjacent sections repeat). Mounts only while the section is near
- * the viewport (IntersectionObserver) so off-screen sections cost
+ * identity. 12 kinds cover all 17 homepage sections + the blog
+ * header, each used at most twice and never on two adjacent
+ * sections — see the kind assignment table in each section's
+ * SectionBackdrop call. Mounts only while the section is near the
+ * viewport (IntersectionObserver) so off-screen sections cost
  * nothing. Drop as the first child of a `position: relative`
  * section — pairs with the global `.section-pad` / `.section-shell`
  * stacking order in globals.css.
@@ -56,6 +64,10 @@ export function SectionBackdrop({ kind }: { kind: SectionBackdropKind }) {
           {kind === "mesh" && <NodeCanvas variant="mesh" />}
           {kind === "constellation" && <NodeCanvas variant="constellation" />}
           {kind === "matrix" && <NodeCanvas variant="matrix" />}
+          {kind === "paper" && <Paper />}
+          {kind === "dotted" && <Dotted />}
+          {kind === "particles" && <Particles />}
+          {kind === "signal" && <Signal />}
         </>
       )}
     </div>

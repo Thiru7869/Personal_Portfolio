@@ -12,7 +12,22 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
  * Table schema lives in backend/supabase/schema.sql.
  */
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+/**
+ * The Supabase client wants the bare project URL (e.g.
+ * https://xxxx.supabase.co) — it appends /rest/v1/... itself. A
+ * common copy-paste mistake is pasting the REST endpoint shown in
+ * the dashboard's API docs (which already has /rest/v1 on it),
+ * which silently doubles the path and makes every request fail
+ * with PostgREST's "Invalid path specified" error. Stripping any
+ * trailing /rest/v1 (and trailing slashes) here means that mistake
+ * can't take the ratings/insights/contact-archive features down.
+ */
+function normalizeSupabaseUrl(raw: string | undefined): string | undefined {
+  if (!raw) return raw;
+  return raw.trim().replace(/\/rest\/v1\/?$/, "").replace(/\/+$/, "");
+}
+
+const url = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 

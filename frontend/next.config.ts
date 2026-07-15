@@ -16,7 +16,8 @@ import type { NextConfig } from "next";
  *     side (through same-origin /api routes), so the browser
  *     only needs 'self' in connect-src plus the analytics beacons.
  *   - img-src allows the GitHub/LeetCode stat-card hosts and
- *     Cloudinary; frame-src allows the Google Maps embed.
+ *     Cloudinary; frame-src allows the Google Maps embed and the
+ *     Google Drive preview iframe (Terminal mode's Resume window).
  * Adjust here if you add a new external script/media/frame host.
  */
 // `next dev` compiles with an eval-based runtime (React Refresh +
@@ -53,7 +54,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   scriptSrc,
   connectSrc,
-  "frame-src 'self' https://www.google.com",
+  "frame-src 'self' https://www.google.com https://drive.google.com",
   "worker-src 'self' blob:",
   // upgrade-insecure-requests would rewrite http://localhost in dev.
   ...(isDev ? [] : ["upgrade-insecure-requests"]),

@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { learningNow, nowItems, philosophy, roadmap, uses } from "@/content/profile";
 import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
+import { ContextualMark } from "@/components/illustrations/ContextualMark";
 
 /**
  * Now — the living section: what I'm doing, learning, aiming
@@ -22,12 +23,16 @@ export function Now() {
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           <Reveal>
-            <div className="card-shell h-full p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+            <div className="card-shell relative h-full overflow-hidden p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+              <ContextualMark
+                kind="mug"
+                className="pointer-events-none absolute -bottom-4 -right-4 h-28 w-28 text-brand2/[0.07]"
+              />
+              <h3 className="relative mb-3 flex items-center gap-2 text-sm font-semibold">
                 <Compass size={15} className="text-brand" aria-hidden="true" />
                 Right now
               </h3>
-              <ul className="space-y-2 text-sm text-ink/85">
+              <ul className="relative space-y-2 text-sm text-ink/85">
                 {nowItems.map((item) => (
                   <li key={item} className="flex gap-2">
                     <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand" aria-hidden="true" />

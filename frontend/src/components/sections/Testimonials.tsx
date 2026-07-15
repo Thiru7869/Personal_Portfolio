@@ -1,6 +1,7 @@
 import { MessageSquareQuote, Quote } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
 import { genuineTestimonials } from "@/content/testimonials";
 import { site } from "@/config/site";
 
@@ -15,10 +16,11 @@ export function Testimonials() {
 
   return (
     <section id="testimonials" aria-label="Testimonials" className="section-pad">
+      <SectionBackdrop kind="waves" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="testimonials"
-          title="Words from the field"
+          title="What People Say"
           lede={
             hasReal
               ? "From the people I've actually worked with."
@@ -45,13 +47,11 @@ export function Testimonials() {
           </div>
         ) : (
           <Reveal>
-            <div className="card-shell mx-auto max-w-xl p-8 text-center">
-              <MessageSquareQuote
-                size={22}
-                className="mx-auto mb-3 text-brand"
-                aria-hidden="true"
-              />
-              <p className="text-sm text-mute">
+            <div className="card-shell mx-auto max-w-xl p-7 text-center sm:p-9">
+              <span className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand/12 text-brand">
+                <MessageSquareQuote size={20} aria-hidden="true" />
+              </span>
+              <p className="text-sm leading-relaxed text-mute">
                 I keep this section honest: it stays empty until I have a real
                 quote from someone I&apos;ve worked with, rather than filling it
                 with invented praise. Want a reference? Reach me at{" "}

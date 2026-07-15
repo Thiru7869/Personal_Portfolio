@@ -27,12 +27,19 @@ export interface TerminalContext {
   scrollTo: (sectionId: string) => void;
   openUrl: (url: string) => void;
   history: string[];
+  /** Only present inside Terminal mode's desktop — spawns a Files/Resume
+   *  window instead of navigating away, so the desktop metaphor holds. */
+  openWindow?: (kind: "resume" | "files") => void;
 }
 
 export interface CommandResult {
   lines: string[];
   /** "clear" wipes the scrollback; animations run in the shell. */
   action?: "clear" | "matrix" | "donut" | "train" | "clock" | "parrot";
+  /** Simulated processing delay (ms) before `lines` appear — for commands
+   *  that "do something" (open a link, switch mode). Skipped under
+   *  prefers-reduced-motion. Keep short: 150-350ms. */
+  delayMs?: number;
 }
 
 export interface TerminalCommand {
@@ -57,6 +64,7 @@ const FILES: Record<string, string[]> = {
   "research.txt": [
     researchPaper.title,
     `${researchPaper.venue} · ${researchPaper.year} · ${researchPaper.status}`,
+    `Official publication: ${researchPaper.publicationUrl}`,
   ],
   "resume.pdf": ["Binary file. Use the `resume` command to open it."],
 };
@@ -80,6 +88,7 @@ export const COMMANDS: TerminalCommand[] = [
         ),
         "",
         "Tip: Tab autocompletes, ↑/↓ walk history.",
+        "Tip: /section jumps straight there — try /projects or /contact.",
       ],
     }),
   },
@@ -113,16 +122,16 @@ export const COMMANDS: TerminalCommand[] = [
     name: "projects",
     description: "List all projects",
     run: (_a, ctx) => {
+      const listing = projects.map(
+        (p) => `  ${p.featured ? "★" : "·"} ${p.title.padEnd(34)} ${p.year} — ${p.tagline}`
+      );
+      if (ctx.openWindow) {
+        ctx.openWindow("files");
+        return { lines: [...listing, "", "→ Opening the Files window…"] };
+      }
       ctx.scrollTo("projects");
       return {
-        lines: [
-          ...projects.map(
-            (p) =>
-              `  ${p.featured ? "★" : "·"} ${p.title.padEnd(34)} ${p.year} — ${p.tagline}`
-          ),
-          "",
-          "→ Scrolled to Projects. Click any card for the full case study.",
-        ],
+        lines: [...listing, "", "→ Scrolled to Projects. Click any card for the full case study."],
       };
     },
   },
@@ -156,8 +165,12 @@ export const COMMANDS: TerminalCommand[] = [
     name: "resume",
     description: "Open my resume (PDF)",
     run: (_a, ctx) => {
+      if (ctx.openWindow) {
+        ctx.openWindow("resume");
+        return { lines: ["Opening resume.pdf…"], delayMs: 220 };
+      }
       ctx.openUrl(site.resumeUrl);
-      return { lines: ["Opening resume.pdf in a new tab…"] };
+      return { lines: ["Opening resume.pdf in a new tab…"], delayMs: 220 };
     },
   },
   {
@@ -165,7 +178,7 @@ export const COMMANDS: TerminalCommand[] = [
     description: "Open my GitHub profile",
     run: (_a, ctx) => {
       ctx.openUrl(link("github"));
-      return { lines: [`Opening ${link("github")} …`] };
+      return { lines: [`Opening ${link("github")} …`], delayMs: 200 };
     },
   },
   {
@@ -173,7 +186,7 @@ export const COMMANDS: TerminalCommand[] = [
     description: "Open my LinkedIn profile",
     run: (_a, ctx) => {
       ctx.openUrl(link("linkedin"));
-      return { lines: [`Opening ${link("linkedin")} …`] };
+      return { lines: [`Opening ${link("linkedin")} …`], delayMs: 200 };
     },
   },
   {
@@ -187,9 +200,18 @@ export const COMMANDS: TerminalCommand[] = [
           `${researchPaper.venue} · ${researchPaper.year} · ${researchPaper.status}`,
           "",
           `Keywords: ${researchPaper.keywords.join(", ")}`,
+          `Official publication: ${researchPaper.publicationUrl}`,
           "→ Scrolled to the Research section for abstract and download.",
         ],
       };
+    },
+  },
+  {
+    name: "paper",
+    description: "Open the official publication page",
+    run: (_a, ctx) => {
+      ctx.openUrl(researchPaper.publicationUrl);
+      return { lines: [`Opening ${researchPaper.publicationUrl} …`], delayMs: 200 };
     },
   },
   {
@@ -265,7 +287,7 @@ export const COMMANDS: TerminalCommand[] = [
       }
       if ((MODE_IDS as readonly string[]).includes(raw)) {
         ctx.setMode(raw as ModeId);
-        return { lines: [`Switching to ${raw} mode…`] };
+        return { lines: [`Switching to ${raw} mode…`], delayMs: 250 };
       }
       return { lines: [`mode: unknown mode '${raw}'. Try 'mode list'.`] };
     },
@@ -299,7 +321,7 @@ export const COMMANDS: TerminalCommand[] = [
         "         `~~~'     Kernel:   Next.js 15 / React 19",
         "                   Shell:    TypeScript (strict)",
         "                   DE:       Tailwind CSS + Framer Motion",
-        "                   Themes:   7 UI modes installed",
+        "                   Themes:   5 UI modes installed",
         `                   Uptime:   coding since 2022`,
         `                   Contact:  ${site.email}`,
       ],
@@ -521,6 +543,75 @@ export const COMMAND_NAMES = COMMANDS.map((c) => c.name);
 
 /** Total number of terminal commands — derived, one source of truth. */
 export const COMMAND_COUNT = COMMANDS.length;
+
+/** Section names that don't have a same-named top-level command, but are
+ *  reachable via `cd <section>` — slash aliases reuse that path. */
+const SLASH_TO_COMMAND: Record<string, string> = {
+  blog: "blogs",
+};
+
+/** Alternate names visitors might reasonably type for a section that
+ *  already has a different canonical id — resolved to `cd <section>`. */
+const SECTION_ALIASES: Record<string, string> = {
+  review: "rating",
+  reviews: "rating",
+  testimonial: "testimonials",
+};
+
+/**
+ * Slash-command aliases: `/projects`, `/contact`, `/resume`, `/blog`, … —
+ * rewritten to the equivalent existing command before dispatch, so no new
+ * command objects are needed for the section ones. Unrecognized slash
+ * input is returned unchanged (falls through to "command not found").
+ */
+export function normalizeSlashInput(raw: string): string {
+  if (!raw.startsWith("/")) return raw;
+  const [head, ...rest] = raw.slice(1).split(/\s+/);
+  const word = head.toLowerCase();
+  // A same-named top-level command (e.g. `projects`, `skills`, `resume`)
+  // has richer, sometimes context-aware output — prefer it over the
+  // generic `cd <section>` scroll, which is only a fallback for
+  // sections that have no dedicated command (services, now, faq, …).
+  if (COMMAND_NAMES.includes(word)) {
+    return [word, ...rest].join(" ");
+  }
+  if (word in SLASH_TO_COMMAND) {
+    return [SLASH_TO_COMMAND[word], ...rest].join(" ");
+  }
+  if (word in SECTION_ALIASES) {
+    return ["cd", SECTION_ALIASES[word], ...rest].join(" ");
+  }
+  if ((SECTION_IDS as readonly string[]).includes(word)) {
+    return ["cd", word, ...rest].join(" ");
+  }
+  return raw;
+}
+
+/** Known valid first-argument values, per command — feeds Tab-completion
+ *  for `cd`, `mode`, `theme`, and `cat` beyond just the command name. */
+export const ARG_COMPLETIONS: Record<string, readonly string[]> = {
+  cd: SECTION_IDS,
+  mode: [...MODE_IDS, "list"],
+  theme: ["light", "dark", "toggle"],
+  cat: Object.keys(FILES),
+};
+
+/** One welcome message, shared by the homepage terminal and the desktop's
+ *  terminal windows — used to be two slightly different literals. */
+export function getTerminalWelcome(context: "embed" | "desktop" = "embed"): string[] {
+  const lines = [
+    "You found the terminal. That's usually where interesting people end up.",
+    "",
+    `ThiruOS 3.0 LTS (Parrot-inspired) — tty1 · ${COMMAND_COUNT}+ commands loaded, zero guarantees kept.`,
+    "",
+    'Type "help" for the full list, or just try "neofetch", "donut", "sudo hire thiru".',
+  ];
+  if (context === "desktop") {
+    lines.push('"exit" (or the taskbar) gets you back to civilian life.');
+  }
+  lines.push("");
+  return lines;
+}
 
 export function findCommand(name: string): TerminalCommand | undefined {
   return COMMANDS.find((c) => c.name === name);

@@ -13,6 +13,7 @@ import {
   FolderOpen,
   Github,
   Home,
+  PanelLeft,
   Search,
   Star,
 } from "lucide-react";
@@ -34,9 +35,9 @@ interface ContextMenuState {
  * interface. Projects are folders: single click selects,
  * double-click (or Enter) opens the case study, right-click
  * opens a context menu (Open / Live Demo / GitHub / Docs).
- * Toolbar has breadcrumbs, search, and sort; the sidebar lists
- * Recent and Favorites. Used on the homepage and inside the
- * terminal desktop's Files window.
+ * Toolbar has breadcrumbs, search, sort, and a sidebar toggle; the
+ * sidebar lists Recent and Favorites. Used on the homepage and
+ * inside the terminal desktop's Files window.
  */
 export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
   const [query, setQuery] = useState("");
@@ -44,6 +45,7 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [openProject, setOpenProject] = useState<Project | null>(null);
   const [menu, setMenu] = useState<ContextMenuState | null>(null);
+  const [showSidebar, setShowSidebar] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
 
   // Homepage shows at most six folders; search filters within them.
@@ -121,6 +123,21 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
           <ChevronRight size={11} aria-hidden="true" />
           <span className="font-semibold text-brand">projects</span>
         </nav>
+        <button
+          type="button"
+          onClick={() => setShowSidebar((v) => !v)}
+          aria-label={showSidebar ? "Hide sidebar" : "Show sidebar"}
+          aria-pressed={showSidebar}
+          title={showSidebar ? "Hide sidebar" : "Show sidebar"}
+          className={cn(
+            "hidden items-center justify-center rounded-lg border p-1.5 transition-colors sm:flex",
+            showSidebar
+              ? "border-brand/50 text-brand"
+              : "border-line text-mute hover:border-brand/50 hover:text-brand"
+          )}
+        >
+          <PanelLeft size={14} aria-hidden="true" />
+        </button>
         <div className="relative ml-auto">
           <Search
             size={13}
@@ -153,8 +170,8 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
 
       <div className="flex">
         {/* Sidebar */}
-        {!compact && (
-          <aside className="hidden w-44 shrink-0 border-r border-line/60 bg-surface/50 p-3 lg:block">
+        {showSidebar && (
+          <aside className="hidden w-44 shrink-0 border-r border-line/60 bg-surface/50 p-3 sm:block">
             <p className="mb-2 px-2 font-mono text-[10px] uppercase tracking-widest text-mute">
               places
             </p>
@@ -201,11 +218,8 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
           ) : (
             <ul
               role="listbox"
-              aria-label="Project folders — double-click or press Enter to open"
-              className={cn(
-                "grid gap-2",
-                compact ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-3"
-              )}
+              aria-label="Project folders — select, then click again (or double-click, or press Enter) to open"
+              className={cn("grid gap-2", compact ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-3")}
             >
               {folders.map((project) => {
                 const isSelected = selected === project.slug;
@@ -215,13 +229,13 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
                       type="button"
                       role="option"
                       aria-selected={isSelected}
-                      onClick={() => setSelected(project.slug)}
+                      onClick={() => (isSelected ? setOpenProject(project) : setSelected(project.slug))}
                       onDoubleClick={() => setOpenProject(project)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") setOpenProject(project);
                       }}
                       onContextMenu={(e) => onContextMenu(e, project)}
-                      title={`${project.description} (double-click to open)`}
+                      title={`${project.description} — click again to open`}
                       className={cn(
                         "flex w-full flex-col items-center gap-1.5 rounded-xl border px-2 py-4 text-center transition-all",
                         isSelected
@@ -237,6 +251,11 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
                       <span className="line-clamp-2 text-xs font-semibold leading-tight">
                         {project.title}
                       </span>
+                      {isSelected && (
+                        <span className="rounded-full bg-brand/15 px-1.5 py-0.5 font-mono text-[9px] text-brand">
+                          open ↵
+                        </span>
+                      )}
                       <span className="font-mono text-[10px] text-mute">
                         modified {project.year}
                       </span>
@@ -256,8 +275,8 @@ export function ProjectExplorer({ compact = false }: { compact?: boolean }) {
       <div className="flex items-center justify-between gap-3 border-t border-line/60 bg-surface/60 px-4 py-2">
         <p className="min-w-0 truncate font-mono text-[11px] text-mute" aria-live="polite">
           {selectedProject
-            ? selectedProject.description
-            : `${folders.length} folders · double-click to open · right-click for options`}
+            ? `${selectedProject.description} — click again to open`
+            : `${folders.length} folders · select, then click again to open · right-click for options`}
         </p>
         <Link
           href="/projects"

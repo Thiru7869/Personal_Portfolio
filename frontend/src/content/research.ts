@@ -31,6 +31,8 @@ export const researchPaper: ResearchPaper = {
     "Signal Processing",
     "Machine Learning in Healthcare",
   ],
+  publicationUrl:
+    "https://ijnrd.org/author_details.php?name=P.Thirumala+Narasimha&slot=5",
   downloadUrl: "https://ijnrd.org/papers/IJNRD2503033.pdf",
   doi: "IJNRD2503033",
   citation:

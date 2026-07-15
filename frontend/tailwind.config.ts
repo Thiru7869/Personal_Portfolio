@@ -2,7 +2,7 @@ import type { Config } from "tailwindcss";
 
 /**
  * Tailwind scales are mapped onto theme CSS variables, so the
- * seven UI modes restyle geometry (rounded-*), typography
+ * five UI modes restyle geometry (rounded-*), typography
  * (font-*), and depth (shadow-*) everywhere — with zero
  * per-component conditionals. Tokens live in src/app/globals.css.
  */
@@ -72,6 +72,18 @@ const config: Config = {
           "60%": { opacity: "1", transform: "scale(1.15)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        logoSignal: {
+          // One quiet "transmission" per 2s cycle — a short dot, a
+          // beat, a slightly longer dash, then rest. Opacity only
+          // (GPU-composited), and the dip never goes fully dark, so
+          // it never reads as a flash.
+          "0%, 100%": { opacity: "1" },
+          "6%": { opacity: "0.4" },
+          "12%": { opacity: "1" },
+          "20%": { opacity: "1" },
+          "26%": { opacity: "0.4" },
+          "38%": { opacity: "1" },
+        },
       },
       animation: {
         blink: "blink 1.06s step-end infinite",
@@ -81,6 +93,7 @@ const config: Config = {
         glitch: "glitch 0.35s steps(2, end) 1",
         "boot-glow": "bootGlow 2.2s ease-in-out infinite",
         "morse-reveal": "morseReveal 0.4s ease-out both",
+        "logo-signal": "logoSignal 2s ease-in-out infinite",
       },
     },
   },

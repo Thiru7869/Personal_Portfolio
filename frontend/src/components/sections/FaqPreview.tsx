@@ -19,11 +19,11 @@ export function FaqPreview() {
 
   return (
     <section id="faq" aria-label="Frequently asked questions" className="section-pad">
-      <SectionBackdrop kind="waves" />
+      <SectionBackdrop kind="dotted" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="faq"
-          title="Questions people actually ask"
+          title="Questions People Ask"
           lede={
             remaining > 0
               ? `The top ${shown}, answered honestly — ${remaining} more on the Q&A page.`

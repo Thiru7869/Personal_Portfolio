@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Download, FileText, Quote } from "lucide-react";
+import { Check, Download, ExternalLink, FileText, Quote } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { researchPaper } from "@/content/research";
@@ -95,13 +95,22 @@ export function Research() {
 
               <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-line/50 pt-6">
                 <a
-                  href={researchPaper.downloadUrl}
+                  href={researchPaper.publicationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary !py-2.5 text-xs"
                 >
+                  <ExternalLink size={14} aria-hidden="true" />
+                  Read paper (official publication)
+                </a>
+                <a
+                  href={researchPaper.downloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost !py-2.5 text-xs"
+                >
                   <Download size={14} aria-hidden="true" />
-                  Download paper (PDF)
+                  Download PDF
                 </a>
                 <button
                   type="button"

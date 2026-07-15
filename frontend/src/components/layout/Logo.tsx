@@ -68,7 +68,7 @@ export function Logo({ variant = "compact", onComplete, className = "" }: LogoPr
           {site.logo}
         </motion.span>
         <span
-          className="h-4 w-[7px] bg-brand transition-transform group-hover:scale-y-125"
+          className="h-4 w-[7px] animate-logo-signal bg-brand transition-transform group-hover:scale-y-125"
           aria-hidden="true"
         />
       </span>

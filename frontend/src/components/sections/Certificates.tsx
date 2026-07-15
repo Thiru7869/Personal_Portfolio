@@ -24,7 +24,7 @@ export function Certificates() {
 
   return (
     <section id="certificates" aria-label="Certificates" className="section-pad">
-      <SectionBackdrop kind="waves" />
+      <SectionBackdrop kind="dotted" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="achievements"

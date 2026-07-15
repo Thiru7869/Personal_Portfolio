@@ -61,6 +61,8 @@ export default function HomePage() {
     publisher: researchPaper.venue,
     abstract: researchPaper.abstract,
     keywords: researchPaper.keywords.join(", "),
+    url: researchPaper.publicationUrl,
+    sameAs: [researchPaper.publicationUrl],
   };
 
   return (

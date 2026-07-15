@@ -89,7 +89,7 @@ export function BlogExplorer({
           </p>
         </div>
       ) : (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2">
           {filtered.map((card) => (
             <Link
               key={card.slug}
@@ -101,7 +101,7 @@ export function BlogExplorer({
                   src={covers[card.slug]}
                   alt=""
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
                   unoptimized
                 />

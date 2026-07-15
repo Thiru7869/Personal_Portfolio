@@ -97,6 +97,7 @@ Title: ${researchPaper.title}
 Venue: ${researchPaper.venue} (${researchPaper.year}, ${researchPaper.status})
 Abstract: ${researchPaper.abstract}
 Key contributions: ${researchPaper.contributions.join("; ")}
+Official publication: ${researchPaper.publicationUrl}
 Citation: ${researchPaper.citation}`);
 
   parts.push(

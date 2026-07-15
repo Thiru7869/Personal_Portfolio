@@ -15,7 +15,7 @@ export function ScrollProgress() {
     <motion.div
       aria-hidden="true"
       style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-brand to-brand2"
+      className="scroll-progress-bar fixed inset-x-0 top-0 z-50 origin-left bg-gradient-to-r from-brand to-brand2"
     />
   );
 }

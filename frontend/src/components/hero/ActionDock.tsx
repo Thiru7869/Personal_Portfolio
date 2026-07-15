@@ -14,6 +14,7 @@ import {
 import { site } from "@/config/site";
 import { scrollToSection } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 interface DockAction {
   label: string;
@@ -85,9 +86,8 @@ export function ActionDock() {
           ? "flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-bg transition-all hover:brightness-110"
           : "flex items-center gap-2 rounded-xl px-3 py-2.5 text-mute transition-all hover:-translate-y-0.5 hover:bg-surface hover:text-brand";
 
-        return action.href ? (
+        const element = action.href ? (
           <a
-            key={action.label}
             href={action.href}
             target={action.href.startsWith("http") ? "_blank" : undefined}
             rel="noopener noreferrer"
@@ -99,7 +99,6 @@ export function ActionDock() {
           </a>
         ) : (
           <button
-            key={action.label}
             type="button"
             onClick={action.onClick}
             aria-label={action.label}
@@ -107,6 +106,14 @@ export function ActionDock() {
           >
             {inner}
           </button>
+        );
+
+        return action.primary ? (
+          <Magnetic key={action.label} strength={10}>
+            {element}
+          </Magnetic>
+        ) : (
+          <span key={action.label}>{element}</span>
         );
       })}
     </motion.div>

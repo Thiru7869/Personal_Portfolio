@@ -6,6 +6,7 @@ import { site } from "@/config/site";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { StatImage } from "@/components/ui/StatImage";
+import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
 
 interface GithubStats {
   repos: number | null;
@@ -39,6 +40,7 @@ export function Activity() {
 
   return (
     <section id="activity" aria-label="Latest coding activity" className="section-pad">
+      <SectionBackdrop kind="signal" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="activity"

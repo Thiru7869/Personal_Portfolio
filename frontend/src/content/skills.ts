@@ -1,4 +1,4 @@
-import type { SkillGroup } from "@shared/types";
+import type { Skill, SkillGroup } from "@shared/types";
 
 /**
  * src/content/skills.ts
@@ -8,6 +8,18 @@ import type { SkillGroup } from "@shared/types";
  * path; individual skills link to roadmap.sh where a roadmap
  * exists, otherwise Wikipedia.
  */
+
+/**
+ * A level→percentage convention for the Skills section's animated
+ * proficiency rings — not a fabricated per-skill number, just a
+ * fixed reading of the four honest levels above as a fill amount.
+ */
+export const LEVEL_PERCENT: Record<Skill["level"], number> = {
+  Advanced: 92,
+  Proficient: 76,
+  Comfortable: 58,
+  Learning: 34,
+};
 
 const wiki = (article: string) => `https://en.wikipedia.org/wiki/${article}`;
 const roadmap = (path: string) => `https://roadmap.sh/${path}`;

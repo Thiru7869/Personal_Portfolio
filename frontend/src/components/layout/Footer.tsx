@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { Code2, Github, Heart, Linkedin, Mail, RotateCcw, TerminalSquare, Twitter } from "lucide-react";
 import { footerLinks } from "@/config/navigation";
 import { site, socialLinks } from "@/config/site";
 import { scrollToSection } from "@/lib/utils";
+import { ContextualMark } from "@/components/illustrations/ContextualMark";
 
 const iconFor = {
   github: Github,
@@ -97,10 +99,23 @@ export function Footer() {
   const pathname = usePathname();
   const router = useRouter();
   const year = new Date().getFullYear();
+  const heartClicks = useRef(0);
+  const [foundEgg, setFoundEgg] = useState(false);
 
   function go(target: string) {
     if (pathname === "/") scrollToSection(target);
     else router.push(`/#${target}`);
+  }
+
+  /** Small footer easter egg — five taps on the heart, no prize
+   *  besides the moment. Independent of the rating/sudo confetti. */
+  function onHeartClick() {
+    heartClicks.current += 1;
+    if (heartClicks.current < 5) return;
+    heartClicks.current = 0;
+    setFoundEgg(true);
+    void import("@/lib/confetti").then((m) => m.fireConfetti());
+    setTimeout(() => setFoundEgg(false), 2800);
   }
 
   return (
@@ -150,11 +165,15 @@ export function Footer() {
           </ul>
         </nav>
 
-        <div>
-          <h3 className="mb-3 font-mono text-xs uppercase tracking-widest text-mute">
+        <div className="relative overflow-hidden">
+          <ContextualMark
+            kind="branch"
+            className="pointer-events-none absolute -right-2 -top-2 h-20 w-20 text-brand/[0.06]"
+          />
+          <h3 className="relative mb-3 font-mono text-xs uppercase tracking-widest text-mute">
             Elsewhere
           </h3>
-          <ul className="flex gap-2">
+          <ul className="relative flex gap-2">
             {socialLinks
               .filter((s) => s.id in iconFor)
               .map((s) => {
@@ -205,11 +224,30 @@ export function Footer() {
               all systems operational
             </span>
           </p>
-          <p className="flex items-center gap-1.5">
+          <p className="relative flex items-center gap-1.5">
             Crafted with
-            <Heart size={12} className="text-brand" aria-hidden="true" />
+            <button
+              type="button"
+              onClick={onHeartClick}
+              aria-label="A little heart, for no particular reason"
+              className="transition-transform hover:scale-125 active:scale-90"
+            >
+              <Heart size={12} className="text-brand" aria-hidden="true" />
+            </button>
             <span className="sr-only">love</span>
             in {site.location.split(",")[0]} — no templates were harmed.
+            <AnimatePresence>
+              {foundEgg && (
+                <motion.span
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="absolute -top-7 right-0 whitespace-nowrap rounded-md border border-brand/30 bg-card px-2.5 py-1 text-[11px] text-brand shadow-card"
+                >
+                  Five clicks. You have too much time on your hands — I respect it.
+                </motion.span>
+              )}
+            </AnimatePresence>
           </p>
         </div>
       </div>

@@ -13,6 +13,7 @@ import {
   relatedArticles,
 } from "@/content/blog";
 import { FloatingBack } from "@/components/layout/FloatingBack";
+import { Paper } from "@/components/layout/backdrops/Paper";
 import { headingId } from "@/content/blog/types";
 import { site } from "@/config/site";
 import { formatDate } from "@/lib/utils";
@@ -99,20 +100,23 @@ export default async function BlogArticlePage({ params }: Props) {
 
       <div className="grid gap-10 lg:grid-cols-[1fr_260px]">
         <article className="min-w-0 max-w-3xl">
-          <header>
-            <div className="flex flex-wrap items-center gap-2 text-xs text-mute">
-              <span className="chip !border-brand/40 !text-brand">{article.category}</span>
-              <span className="chip">{article.difficulty}</span>
-              <time dateTime={article.publishDate}>{formatDate(article.publishDate)}</time>
-              <span aria-hidden="true">·</span>
-              <span className="flex items-center gap-1">
-                <Clock size={11} aria-hidden="true" /> {article.readingTime} min read
-              </span>
+          <header className="relative -m-4 overflow-hidden rounded-2xl p-4">
+            <Paper />
+            <div className="relative">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-mute">
+                <span className="chip !border-brand/40 !text-brand">{article.category}</span>
+                <span className="chip">{article.difficulty}</span>
+                <time dateTime={article.publishDate}>{formatDate(article.publishDate)}</time>
+                <span aria-hidden="true">·</span>
+                <span className="flex items-center gap-1">
+                  <Clock size={11} aria-hidden="true" /> {article.readingTime} min read
+                </span>
+              </div>
+              <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+                {article.title}
+              </h1>
+              <p className="mt-3 text-lg text-mute">{article.subtitle}</p>
             </div>
-            <h1 className="mt-4 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
-              {article.title}
-            </h1>
-            <p className="mt-3 text-lg text-mute">{article.subtitle}</p>
           </header>
 
           <div className="relative mt-7 aspect-[1200/630] overflow-hidden rounded-2xl border border-line/60">

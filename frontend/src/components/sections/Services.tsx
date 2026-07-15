@@ -24,7 +24,7 @@ const serviceIcons: Record<string, LucideIcon> = {
 export function Services() {
   return (
     <section id="services" aria-label="What I build" className="section-pad">
-      <SectionBackdrop kind="aurora" />
+      <SectionBackdrop kind="particles" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="services"

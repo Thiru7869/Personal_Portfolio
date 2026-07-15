@@ -5,6 +5,7 @@ import {
   COMMAND_COUNT,
   findCommand,
   suggestCommand,
+  normalizeSlashInput,
 } from "./terminal-commands";
 
 describe("command registry", () => {
@@ -39,5 +40,24 @@ describe("suggestCommand", () => {
 
   it("returns null for empty input", () => {
     expect(suggestCommand("")).toBeNull();
+  });
+});
+
+describe("normalizeSlashInput", () => {
+  it("rewrites section slash-aliases to `cd <section>`", () => {
+    expect(normalizeSlashInput("/review")).toBe("cd rating");
+    expect(normalizeSlashInput("/reviews")).toBe("cd rating");
+    expect(normalizeSlashInput("/rating")).toBe("cd rating");
+    expect(normalizeSlashInput("/testimonial")).toBe("cd testimonials");
+    expect(normalizeSlashInput("/testimonials")).toBe("cd testimonials");
+  });
+
+  it("prefers a same-named top-level command over the section fallback", () => {
+    expect(normalizeSlashInput("/projects")).toBe("projects");
+    expect(normalizeSlashInput("/blog")).toBe("blogs");
+  });
+
+  it("leaves unrecognized slash input unchanged", () => {
+    expect(normalizeSlashInput("/nonexistent")).toBe("/nonexistent");
   });
 });

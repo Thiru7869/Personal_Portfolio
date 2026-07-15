@@ -4,6 +4,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { aboutParagraphs, aboutSections, enjoyBuilding } from "@/content/profile";
 import { site } from "@/config/site";
 import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
+import { ContextualMark } from "@/components/illustrations/ContextualMark";
 
 /**
  * About — the owner's story verbatim (src/content/profile.ts),
@@ -19,7 +20,7 @@ import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
 export function About() {
   return (
     <section id="about" aria-label="About me" className="section-pad">
-      <SectionBackdrop kind="grid" />
+      <SectionBackdrop kind="paper" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="about"
@@ -86,12 +87,16 @@ export function About() {
             </Reveal>
 
             <Reveal delay={0.18}>
-              <div className="card-shell p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+              <div className="card-shell relative overflow-hidden p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+                <ContextualMark
+                  kind="brackets"
+                  className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 text-brand/[0.07]"
+                />
+                <h3 className="relative mb-3 flex items-center gap-2 text-sm font-semibold">
                   <Hammer size={15} className="text-brand2" aria-hidden="true" />
                   Things I enjoy building
                 </h3>
-                <ul className="space-y-2 text-sm text-ink/85">
+                <ul className="relative space-y-2 text-sm text-ink/85">
                   {enjoyBuilding.map((item) => (
                     <li key={item} className="flex gap-2">
                       <span

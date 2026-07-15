@@ -5,12 +5,15 @@ import { themeVar } from "@/lib/theme-vars";
 
 /**
  * TechConstellation — the hero's calm living background: a small,
- * curated set of core-skill nodes drifting very slowly along
- * fixed elliptical orbits around generously-spaced anchor points.
- * No pointer chase, no runtime randomness — motion is entirely
- * deterministic ("predefined paths"), low-opacity, and never
- * overlaps. Canvas-based, DPR-aware, pauses when hidden, static
- * for reduced-motion.
+ * curated set of core-skill nodes drifting slowly along fixed
+ * elliptical orbits around generously-spaced anchor points. Motion
+ * is deterministic ("predefined paths"), low-opacity, and never
+ * overlaps. On top of that base drift, nodes within a small radius
+ * of the cursor get a gentle pull toward it — capped, decaying with
+ * distance, and drawn with a faint connecting thread — like a soft
+ * web reacting to a hand nearby, not a chase. Canvas-based,
+ * DPR-aware, pauses when hidden, static (and non-interactive) for
+ * reduced-motion.
  */
 
 const TECH_NODES = ["Python", "React", "Next.js", "TypeScript", "Docker", "AWS", "PostgreSQL"];
@@ -52,6 +55,9 @@ export function TechConstellation({ className = "" }: { className?: string }) {
     let nodes: Node[] = [];
     let running = true;
     let t = 0;
+    const PULL_RADIUS = 130;
+    const MAX_PULL = 16;
+    const mouse = { x: -9999, y: -9999, active: false };
 
     // Cached theme lookup — refreshed only on mode/appearance change.
     function tokens() {
@@ -97,10 +103,17 @@ export function TechConstellation({ className = "" }: { className?: string }) {
       ctx!.clearRect(0, 0, w, h);
       t += 1;
 
-      const positions = nodes.map((n) => ({
-        x: n.anchorX + Math.cos(t * n.speed + n.phase) * n.orbitRx,
-        y: n.anchorY + Math.sin(t * n.speed + n.phase) * n.orbitRy,
-      }));
+      const positions = nodes.map((n) => {
+        const baseX = n.anchorX + Math.cos(t * n.speed + n.phase) * n.orbitRx;
+        const baseY = n.anchorY + Math.sin(t * n.speed + n.phase) * n.orbitRy;
+        if (!mouse.active) return { x: baseX, y: baseY, pull: 0 };
+        const dx = mouse.x - baseX;
+        const dy = mouse.y - baseY;
+        const dist = Math.hypot(dx, dy);
+        if (dist >= PULL_RADIUS || dist < 0.01) return { x: baseX, y: baseY, pull: 0 };
+        const pull = (1 - dist / PULL_RADIUS) * MAX_PULL;
+        return { x: baseX + (dx / dist) * pull, y: baseY + (dy / dist) * pull, pull: pull / MAX_PULL };
+      });
 
       // Faint links between nearby nodes only — sparse, low opacity.
       for (let i = 0; i < positions.length; i++) {
@@ -115,6 +128,20 @@ export function TechConstellation({ className = "" }: { className?: string }) {
             ctx!.stroke();
           }
         }
+      }
+
+      // A faint thread from the cursor to any node it's currently pulling —
+      // the "web reacting to a nearby hand" read.
+      if (mouse.active) {
+        positions.forEach((p) => {
+          if (p.pull <= 0) return;
+          ctx!.strokeStyle = `rgba(${brand},${(0.16 * p.pull).toFixed(3)})`;
+          ctx!.lineWidth = 1;
+          ctx!.beginPath();
+          ctx!.moveTo(mouse.x, mouse.y);
+          ctx!.lineTo(p.x, p.y);
+          ctx!.stroke();
+        });
       }
 
       nodes.forEach((node, i) => {
@@ -140,14 +167,30 @@ export function TechConstellation({ className = "" }: { className?: string }) {
       running = document.visibilityState === "visible";
       if (running && !reduce) raf = requestAnimationFrame(frame);
     }
+    function onMouseMove(e: globalThis.MouseEvent) {
+      const rect = canvas!.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+      mouse.active = true;
+    }
+    function onMouseLeave() {
+      mouse.active = false;
+    }
 
     seed();
     frame();
     window.addEventListener("resize", onResize);
     document.addEventListener("visibilitychange", onVisibility);
+    // Reduced-motion users get the calm static frame only — no cursor pull.
+    if (!reduce) {
+      window.addEventListener("mousemove", onMouseMove, { passive: true });
+      document.documentElement.addEventListener("mouseleave", onMouseLeave);
+    }
     return () => {
       cancelAnimationFrame(raf);
       running = false;
+      window.removeEventListener("mousemove", onMouseMove);
+      document.documentElement.removeEventListener("mouseleave", onMouseLeave);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
     };

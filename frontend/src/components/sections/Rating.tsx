@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import {
   CircleCheck,
@@ -13,8 +13,11 @@ import {
 import type { RatingSummary } from "@shared/types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
+import { useTypewriter } from "@/lib/use-typewriter";
+import { Magnetic } from "@/components/ui/Magnetic";
 
 const RATED_KEY = "thiru-portfolio-rated";
 
@@ -60,6 +63,62 @@ function buildStatus(average: number): { label: string; cls: string } {
   if (average >= 3.5) return { label: "PASSING", cls: "text-brand border-brand/40 bg-brand/10" };
   if (average >= 2.5) return { label: "UNSTABLE", cls: "text-amber-400 border-amber-400/40 bg-amber-400/10" };
   return { label: "NEEDS WORK", cls: "text-red-400 border-red-400/40 bg-red-400/10" };
+}
+
+/** One comment as a chat bubble — types itself out the first time it
+ *  scrolls into view, once only (src/lib/use-typewriter.ts). */
+function CommentBubble({
+  comment,
+  verdict,
+  delay,
+}: {
+  comment: RatingSummary["recentComments"][number];
+  verdict?: Verdict;
+  delay: number;
+}) {
+  const [inView, setInView] = useState(false);
+  const shown = useTypewriter(comment.feedback, inView);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      onViewportEnter={() => setInView(true)}
+      transition={{ delay, duration: 0.3 }}
+      className="flex items-start gap-2"
+    >
+      <span
+        className={cn(
+          "mt-1 shrink-0 rounded-full border border-current/25 px-1.5 py-0.5 font-mono text-[9px] font-semibold",
+          verdict ? TONE_TEXT[verdict.tone] : "text-mute"
+        )}
+      >
+        {verdict?.label ?? comment.score}
+      </span>
+      <span className="min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-line/60 bg-surface/70 px-3 py-2 text-xs leading-relaxed text-ink/90">
+        {shown || " "}
+        {shown.length < comment.feedback.length && (
+          <span className="term-caret" aria-hidden="true" />
+        )}
+      </span>
+    </motion.div>
+  );
+}
+
+/** The honest empty state — visually distinct (dashed, muted) from a
+ *  real comment bubble so it can never be mistaken for one. */
+function SystemBubble({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-2">
+      <span className="mt-1 shrink-0 rounded-full border border-dashed border-line px-1.5 py-0.5 font-mono text-[9px] text-mute">
+        system
+      </span>
+      <span className="min-w-0 flex-1 rounded-2xl rounded-tl-sm border border-dashed border-line/70 px-3 py-2 text-xs leading-relaxed text-mute">
+        {children}
+      </span>
+    </div>
+  );
 }
 
 /**
@@ -157,10 +216,11 @@ export function Rating() {
 
   return (
     <section id="rating" aria-label="Review this portfolio" className="section-pad exec-hide">
+      <SectionBackdrop kind="mesh" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="review"
-          title="Ship readiness review"
+          title="Feedback"
           lede="You've read the code — now sign off on it. Leave a verdict like you would on a pull request; it goes straight into the database you just read about."
         />
 
@@ -250,14 +310,16 @@ export function Rating() {
                     className="mt-3 w-full resize-none rounded-xl border border-line bg-surface/60 px-4 py-3 text-sm text-ink placeholder:text-mute/70 focus:border-brand/60 focus:outline-none"
                   />
 
-                  <button
-                    type="button"
-                    onClick={submit}
-                    disabled={!selected || status === "sending"}
-                    className="btn-primary mt-3 !py-2 text-xs disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    {status === "sending" ? "Submitting…" : "Submit review"}
-                  </button>
+                  <Magnetic strength={8} className="mt-3 inline-block">
+                    <button
+                      type="button"
+                      onClick={submit}
+                      disabled={!selected || status === "sending"}
+                      className="btn-primary !py-2 text-xs disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      {status === "sending" ? "Submitting…" : "Submit review"}
+                    </button>
+                  </Magnetic>
                   {status === "error" && (
                     <p className="mt-2 text-xs text-red-400" role="alert">
                       Couldn&apos;t save that — mind trying once more?
@@ -327,43 +389,34 @@ export function Rating() {
                     })}
                   </div>
 
-                  {summary.recentComments.length > 0 && (
-                    <div className="mt-5 space-y-2 border-t border-line/60 pt-4">
-                      <p className="font-mono text-[10px] uppercase tracking-widest text-mute">
-                        recent comments
-                      </p>
-                      {summary.recentComments.map((c, i) => {
-                        const verdict = VERDICTS.find((v) => v.score === c.score);
-                        return (
-                          <motion.p
-                            key={`${c.score}-${i}`}
-                            initial={{ opacity: 0, x: -6 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.06, duration: 0.3 }}
-                            className="flex items-start gap-2 text-xs leading-relaxed"
-                          >
-                            <span
-                              className={cn(
-                                "mt-0.5 shrink-0 font-mono text-[10px] font-semibold",
-                                verdict ? TONE_TEXT[verdict.tone] : "text-mute"
-                              )}
-                            >
-                              {verdict?.label ?? c.score}
-                            </span>
-                            <span className="text-mute">&ldquo;{c.feedback}&rdquo;</span>
-                          </motion.p>
-                        );
-                      })}
-                    </div>
-                  )}
+                  <div className="mt-5 space-y-2.5 border-t border-line/60 pt-4">
+                    <p className="font-mono text-[10px] uppercase tracking-widest text-mute">
+                      the thread
+                    </p>
+                    {summary.recentComments.length > 0 ? (
+                      summary.recentComments.map((c, i) => (
+                        <CommentBubble
+                          key={`${c.score}-${i}`}
+                          comment={c}
+                          verdict={VERDICTS.find((v) => v.score === c.score)}
+                          delay={i * 0.08}
+                        />
+                      ))
+                    ) : (
+                      <SystemBubble>
+                        Verdicts only so far — no one&apos;s left a comment yet.
+                      </SystemBubble>
+                    )}
+                  </div>
                 </>
               ) : (
-                <p className="mt-3 text-sm text-mute">
-                  {status === "offline"
-                    ? "The readiness score appears here once the database is connected."
-                    : "No reviews merged yet — you could be the first sign-off."}
-                </p>
+                <div className="mt-3">
+                  <SystemBubble>
+                    {status === "offline"
+                      ? "The readiness score appears here once the database is connected."
+                      : "No reviews yet — be the first to leave one."}
+                  </SystemBubble>
+                </div>
               )}
             </div>
           </div>

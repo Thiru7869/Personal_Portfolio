@@ -185,6 +185,8 @@ export interface ResearchPaper {
   abstract: string;
   contributions: string[];
   keywords: string[];
+  /** Official publication page on the journal's site — the canonical link. */
+  publicationUrl: string;
   downloadUrl: string;
   doi?: string;
   citation: string;

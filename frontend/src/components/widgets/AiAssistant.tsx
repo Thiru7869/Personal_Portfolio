@@ -1,17 +1,36 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, Send, Sparkles, TerminalSquare, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { suggestedQuestions } from "@/content/ai-knowledge";
 import { site } from "@/config/site";
-import { cn } from "@/lib/utils";
+import { cn, scrollToSection } from "@/lib/utils";
 import { useChat } from "@/lib/use-chat";
 import { trackEvent } from "@/lib/analytics";
+import { useExperience } from "@/lib/theme-context";
 
 const GREETING = `[*] \`thiru-assistant\` online. I know ${site.shortName}'s projects, research, experience, and availability inside out — ask me anything about his work, or how to hire him.`;
+
+/** A rotating hint of the same slash-navigation shortcuts the
+ *  terminal supports — genuinely functional here too (see
+ *  handleSlashShortcut below), not just a decorative echo. */
+const HINT_COMMANDS = ["/home", "/about", "/projects", "/blog", "/contact", "/skills", "/help", "/theme", "/research", "/resume"];
+
+/** Section ids reachable with a plain scroll — kept intentionally
+ *  small (matches the hint list) rather than importing the full
+ *  terminal command registry into the chat widget. */
+const CHAT_SLASH_SECTIONS: Record<string, string> = {
+  home: "home",
+  about: "about",
+  projects: "projects",
+  skills: "skills",
+  contact: "contact",
+  research: "research",
+};
 
 /**
  * AiAssistant — the floating chat bubble (bottom right).
@@ -23,6 +42,8 @@ export function AiAssistant() {
   const [input, setInput] = useState("");
   const [openedOnce, setOpenedOnce] = useState(false);
   const { messages, send, busy, streaming } = useChat(GREETING);
+  const router = useRouter();
+  const { toggleAppearance } = useExperience();
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,7 +75,43 @@ export function AiAssistant() {
     return () => window.removeEventListener("open-ai-assistant", onOpen);
   }, []);
 
+  /** Handles the small set of slash shortcuts advertised by the input
+   *  hint (same idea as the terminal, scoped down for the chat
+   *  widget). Returns true if it was a shortcut and nothing should
+   *  be sent to the AI. */
+  function handleSlashShortcut(text: string): boolean {
+    const trimmed = text.trim();
+    if (!trimmed.startsWith("/")) return false;
+    const word = trimmed.slice(1).toLowerCase();
+    if (word in CHAT_SLASH_SECTIONS) {
+      setOpen(false);
+      scrollToSection(CHAT_SLASH_SECTIONS[word]);
+      return true;
+    }
+    if (word === "blog") {
+      setOpen(false);
+      router.push("/blog");
+      return true;
+    }
+    if (word === "resume") {
+      window.open(site.resumeUrl, "_blank", "noopener,noreferrer");
+      return true;
+    }
+    if (word === "theme") {
+      toggleAppearance();
+      return true;
+    }
+    if (word === "help") {
+      return true;
+    }
+    return false;
+  }
+
   function submit(text: string) {
+    if (handleSlashShortcut(text)) {
+      setInput("");
+      return;
+    }
     setInput("");
     void send(text);
   }
@@ -192,26 +249,42 @@ export function AiAssistant() {
                 e.preventDefault();
                 submit(input);
               }}
-              className="flex items-center gap-2 border-t border-line/60 bg-surface/60 p-3"
+              className="border-t border-line/60 bg-surface/60 p-3"
             >
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                maxLength={800}
-                placeholder="Ask about projects, research, hiring…"
-                aria-label="Message Thiru Assistant"
-                className="flex-1 rounded-xl border border-line bg-card px-3.5 py-2.5 text-sm text-ink placeholder:text-mute/60 focus:border-brand/60 focus:outline-none"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || busy}
-                aria-label="Send message"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-bg transition-all hover:brightness-110 disabled:opacity-40"
-              >
-                <Send size={16} aria-hidden="true" />
-              </button>
+              <AnimatePresence>
+                {!input && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.55 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    aria-hidden="true"
+                    className="mb-1.5 truncate px-0.5 font-mono text-[10.5px] text-mute"
+                  >
+                    try: {HINT_COMMANDS.join("  ")}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  maxLength={800}
+                  placeholder="Ask about projects, research, hiring…"
+                  aria-label="Message Thiru Assistant"
+                  className="flex-1 rounded-xl border border-line bg-card px-3.5 py-2.5 text-sm text-ink placeholder:text-mute/60 focus:border-brand/60 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={!input.trim() || busy}
+                  aria-label="Send message"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand text-bg transition-all hover:brightness-110 disabled:opacity-40"
+                >
+                  <Send size={16} aria-hidden="true" />
+                </button>
+              </div>
             </form>
           </motion.div>
         )}

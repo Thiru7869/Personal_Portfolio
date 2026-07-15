@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import {
   Activity,
   BookOpen,
@@ -13,18 +14,25 @@ import {
   Languages as LanguagesIcon,
   Server,
   Target,
+  User,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { site } from "@/config/site";
 import { useExperience } from "@/lib/theme-context";
 import { skillGroups } from "@/content/skills";
-import { learningNow, nowItems } from "@/content/profile";
+import { aboutParagraphs, learningNow, nowItems } from "@/content/profile";
 import { recentArticles } from "@/content/blog";
 import { siteStatistics } from "@/content/datasets";
 import { AppearanceToggle } from "@/components/layout/ThemeSwitcher";
 import { SectionBackdrop } from "@/components/layout/SectionBackdrop";
 import { StatImage } from "@/components/ui/StatImage";
+import { DeveloperAtDesk } from "@/components/illustrations/DeveloperAtDesk";
+
+const WIDGET_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 18, scale: 0.97 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: "easeOut" } },
+};
 
 interface GithubStats {
   repos: number | null;
@@ -63,7 +71,8 @@ function Widget({
   wide?: boolean;
 }) {
   return (
-    <section
+    <motion.section
+      variants={WIDGET_VARIANTS}
       aria-label={title}
       className={`card-shell flex min-w-0 flex-col p-4 ${wide ? "md:col-span-2" : ""}`}
     >
@@ -72,7 +81,7 @@ function Widget({
         {title}
       </h2>
       <div className="min-h-0 min-w-0 flex-1">{children}</div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -88,6 +97,19 @@ export function DevDashboard() {
   const [chartOk, setChartOk] = useState(true);
   const [streakOk, setStreakOk] = useState(true);
   const [leetOk, setLeetOk] = useState(true);
+  const reduce = useReducedMotion();
+  // A brief "booting" beat before the widget grid materializes — the
+  // cinematic opening. Skipped entirely under reduced motion.
+  const [booted, setBooted] = useState(false);
+
+  useEffect(() => {
+    if (reduce) {
+      setBooted(true);
+      return;
+    }
+    const t = setTimeout(() => setBooted(true), 500);
+    return () => clearTimeout(t);
+  }, [reduce]);
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -107,15 +129,23 @@ export function DevDashboard() {
   }, []);
 
   return (
-    <div
+    <motion.div
       role="application"
       aria-label="Developer Dashboard mode"
+      initial={reduce ? false : { opacity: 0, scale: 1.015 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className="relative fixed inset-0 z-[60] flex flex-col bg-bg"
     >
       <SectionBackdrop kind="matrix" />
 
       {/* Editor-style title bar */}
-      <div className="relative z-[1] flex h-12 items-center justify-between border-b border-line/70 bg-surface/90 px-4 font-mono text-xs">
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, delay: 0.05 }}
+        className="relative z-[1] flex h-12 items-center justify-between border-b border-line/70 bg-surface/90 px-4 font-mono text-xs"
+      >
         <div className="flex items-center gap-3">
           <span className="font-bold text-brand">&lt;/&gt; dev.dashboard</span>
           <span className="hidden text-mute sm:inline">
@@ -135,11 +165,38 @@ export function DevDashboard() {
             <X size={13} aria-hidden="true" /> exit
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Widget grid */}
       <div className="relative z-[1] min-h-0 min-w-0 flex-1 overflow-y-auto p-4">
-        <div className="mx-auto grid min-w-0 max-w-6xl gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {!booted ? (
+          <div className="flex h-full items-center justify-center font-mono text-xs text-mute">
+            <motion.span
+              animate={{ opacity: [0.4, 1, 0.4] }}
+              transition={{ duration: 0.9, repeat: Infinity, ease: "easeInOut" }}
+            >
+              &gt; initializing dashboard…
+            </motion.span>
+          </div>
+        ) : (
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
+          className="mx-auto grid min-w-0 max-w-6xl gap-4 md:grid-cols-2 xl:grid-cols-3"
+        >
+          <Widget title="About" icon={User} wide>
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
+              <DeveloperAtDesk className="h-32 w-full max-w-[220px] shrink-0 sm:h-36" />
+              <div className="min-w-0">
+                <p className="text-sm leading-relaxed text-ink/90">{aboutParagraphs[0]}</p>
+                <p className="mt-2 font-mono text-[11px] text-mute">
+                  {site.roles.join(" · ")} — {site.location}
+                </p>
+              </div>
+            </div>
+          </Widget>
+
           <Widget title="GitHub contributions" icon={Github} wide>
             {chartOk ? (
               <div className="overflow-x-auto rounded-lg border border-line/60 bg-surface/60 p-2">
@@ -323,7 +380,8 @@ export function DevDashboard() {
               ))}
             </ul>
           </Widget>
-        </div>
+        </motion.div>
+        )}
       </div>
 
       {/* Status strip */}
@@ -332,6 +390,6 @@ export function DevDashboard() {
         <span className="hidden sm:inline">open to opportunities · {site.email}</span>
         <span>UTF-8 · TSX · Ln 42</span>
       </div>
-    </div>
+    </motion.div>
   );
 }
