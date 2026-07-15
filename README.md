@@ -12,7 +12,7 @@ analytics, and a working contact pipeline — all running on **free tiers**.
 
 `Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS` · `Framer Motion` · `Supabase` · `Node.js`
 
-[Live Site](https://thiru.dev) · [Blog](/blog) · [Q&A](/qa) · [GitHub](https://github.com/Thiru7869)
+[Live Site](https://thiru.dev) · [Vercel Deployment](https://personal-portfolio-three-sand-92.vercel.app/) · [Blog](/blog) · [Q&A](/qa) · [GitHub](https://github.com/Thiru7869)
 
 </div>
 
@@ -136,6 +136,7 @@ service: [docs/API_KEYS_SETUP.md](docs/API_KEYS_SETUP.md) (or the focused guides
 
 **Vercel (recommended).** Push to GitHub → import at vercel.com/new → set **Root Directory to
 `frontend`** → add environment variables → Deploy. Full guide: [deployment.md](deployment.md).
+Live instance: [personal-portfolio-three-sand-92.vercel.app](https://personal-portfolio-three-sand-92.vercel.app/).
 
 **Render.** The repo ships [`render.yaml`](render.yaml) — New → Blueprint on render.com, point
 it at the repo, set the env vars in the dashboard.
