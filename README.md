@@ -12,7 +12,7 @@ analytics, and a working contact pipeline — all running on **free tiers**.
 
 `Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS` · `Framer Motion` · `Supabase` · `Node.js`
 
-[Live ite](https://personal-portfolio-three-sand-92.vercel.app/) · [Blog](/blog) · [Q&A](/qa) · [GitHub](https://github.com/Thiru7869)
+[Live site](https://personal-portfolio-three-sand-92.vercel.app/) · [Blog](/blog) · [Q&A](/qa) · [GitHub](https://github.com/Thiru7869)
 
 </div>
 
