@@ -23,7 +23,7 @@ const DevDashboard = dynamic(
  * their own shells (Parrot desktop, AI workspace, developer
  * dashboard). The regular DOM stays mounted (hidden) so
  * switching back is instant and server-rendered content remains
- * intact for SEO. Professional and Executive render normally.
+ * intact for SEO. Professional renders normally.
  */
 export function ThemeShell({ children }: { children: ReactNode }) {
   const { mode } = useExperience();

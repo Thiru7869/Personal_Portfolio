@@ -59,7 +59,7 @@ export default function OgImage() {
             color: "#8ba0c4",
           }}
         >
-          Next.js · TypeScript · Python · AI — five modes, one terminal, zero
+          Next.js · TypeScript · Python · AI — four modes, one terminal, zero
           templates.
         </div>
       </div>

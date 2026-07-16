@@ -125,7 +125,7 @@ export function AiAssistant() {
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.94 }}
         aria-label={open ? "Close Thiru Assistant" : "Open Thiru Assistant"}
-        className="exec-hide fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/40 bg-card text-brand shadow-glow sm:right-6"
+        className="fixed bottom-6 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-brand/40 bg-card text-brand shadow-glow sm:right-6"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.span

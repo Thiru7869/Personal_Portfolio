@@ -28,7 +28,7 @@ export function Certificates() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="achievements"
-          title="Achievements & Certifications"
+          title="Achievements"
           lede="Milestones first, paperwork second — every certificate links to the verifiable document on Google Drive."
         />
 
@@ -48,7 +48,7 @@ export function Certificates() {
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {certificates.map((cert, i) => (
             <Reveal key={cert.id} delay={(i % 3) * 0.06}>
-              <li className="card-shell group h-full overflow-hidden transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+              <li className="card-shell group h-full overflow-hidden">
                 <button
                   type="button"
                   onClick={() => setActive(cert)}
@@ -61,10 +61,10 @@ export function Certificates() {
                       alt={`${cert.title} certificate from ${cert.issuer}`}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                       unoptimized={cert.image.endsWith(".svg")}
                     />
-                    <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg bg-bg/80 text-ink opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg bg-bg/80 text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                       <Maximize2 size={14} aria-hidden="true" />
                     </span>
                   </div>

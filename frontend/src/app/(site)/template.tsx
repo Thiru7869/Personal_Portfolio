@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
+import { EASE_OUT } from "@/lib/motion";
 
 /**
  * (site) template — Next.js remounts this on every navigation
@@ -18,7 +19,7 @@ export default function SiteTemplate({ children }: { children: ReactNode }) {
     <motion.div
       initial={reduce ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
+      transition={{ duration: 0.25, ease: EASE_OUT }}
     >
       {children}
     </motion.div>

@@ -11,6 +11,7 @@ import { TerminalShell } from "@/components/terminal/TerminalShell";
 import { TerminalThemeToggle } from "@/components/terminal/TerminalThemeToggle";
 import { ProjectExplorer } from "@/components/projects/ProjectExplorer";
 import { ResumeViewer } from "@/components/modes/ResumeViewer";
+import { Game2048 } from "@/components/game/Game2048";
 import { AppearanceToggle } from "@/components/layout/ThemeSwitcher";
 import { WINDOW_KINDS, type WindowKind } from "@/components/modes/window-kinds";
 import { ContextualMark } from "@/components/illustrations/ContextualMark";
@@ -188,6 +189,7 @@ export function TerminalDesktop() {
     { label: "Terminal", icon: WINDOW_KINDS.terminal.icon, action: () => spawnWindow("terminal") },
     { label: "Projects", icon: WINDOW_KINDS.files.icon, action: () => spawnWindow("files") },
     { label: "Resume", icon: WINDOW_KINDS.resume.icon, action: () => spawnWindow("resume") },
+    { label: "2048", icon: WINDOW_KINDS.game.icon, action: () => spawnWindow("game") },
     { label: "Exit to Site", icon: Monitor, action: () => setMode("professional") },
   ];
 
@@ -353,6 +355,10 @@ export function TerminalDesktop() {
               ) : win.kind === "files" ? (
                 <div className="h-full overflow-y-auto">
                   <ProjectExplorer />
+                </div>
+              ) : win.kind === "game" ? (
+                <div className="h-full overflow-y-auto p-4">
+                  <Game2048 />
                 </div>
               ) : (
                 <ResumeViewer className="h-full" />

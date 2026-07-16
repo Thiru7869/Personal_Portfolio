@@ -16,7 +16,7 @@ export function Projects() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="projects"
-          title="Recent Work"
+          title="Projects"
           lede="Browse them like I do — as folders. Double-click opens the full case study; right-click for demo and source."
         />
 

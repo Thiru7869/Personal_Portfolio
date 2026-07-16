@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider, themeInitScript } from "@/lib/theme-context";
@@ -8,9 +8,7 @@ import { shortBio } from "@/content/profile";
 import "./globals.css";
 
 // Body and mono are used on first paint in the default (professional)
-// mode, so they preload. The serif is ONLY used by Executive mode, so
-// it's deferred (preload: false) — it still loads on demand when that
-// mode is selected, without taxing initial paint.
+// mode, so they both preload.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -21,16 +19,6 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-  preload: false,
-  // Executive headings use weight only — skip the optical-size /
-  // SOFT / WONK axes to keep the download small.
-  axes: [],
 });
 
 export const metadata: Metadata = {
@@ -113,7 +101,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} ${fraunces.variable} font-sans antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <ThemeProvider>{children}</ThemeProvider>
         <Analytics />

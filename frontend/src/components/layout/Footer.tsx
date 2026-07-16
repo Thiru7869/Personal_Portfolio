@@ -4,11 +4,12 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Code2, Github, Heart, Linkedin, Mail, RotateCcw, TerminalSquare, Twitter } from "lucide-react";
+import { Code2, Github, Heart, Linkedin, Mail, RotateCcw, Twitter } from "lucide-react";
 import { footerLinks } from "@/config/navigation";
 import { site, socialLinks } from "@/config/site";
 import { scrollToSection } from "@/lib/utils";
 import { ContextualMark } from "@/components/illustrations/ContextualMark";
+import { Logo } from "@/components/layout/Logo";
 
 const iconFor = {
   github: Github,
@@ -123,13 +124,13 @@ export function Footer() {
       <div className="section-shell grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
           <p className="flex items-center gap-2 font-mono text-sm font-bold">
-            <TerminalSquare size={17} className="text-brand" aria-hidden="true" />
+            <Logo variant="mark" />
             {site.shortName.toLowerCase()}
             <span className="text-brand">@</span>portfolio
           </p>
           <p className="mt-3 max-w-sm text-sm text-mute">
             {site.roles.join(" · ")}. Built with Next.js, TypeScript, and an
-            unreasonable attention to detail — five experience modes and a
+            unreasonable attention to detail — four experience modes and a
             working terminal included.
           </p>
           <p className="mt-4 font-mono text-xs text-mute">
@@ -147,7 +148,7 @@ export function Footer() {
                 {item.target.startsWith("/") ? (
                   <Link
                     href={item.target}
-                    className="text-sm text-mute transition-colors hover:text-brand"
+                    className="link-draw text-sm text-mute transition-colors hover:text-brand"
                   >
                     {item.label}
                   </Link>
@@ -155,7 +156,7 @@ export function Footer() {
                   <button
                     type="button"
                     onClick={() => go(item.target)}
-                    className="text-sm text-mute transition-colors hover:text-brand"
+                    className="link-draw text-sm text-mute transition-colors hover:text-brand"
                   >
                     {item.label}
                   </button>

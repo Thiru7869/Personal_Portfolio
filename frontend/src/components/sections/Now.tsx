@@ -17,13 +17,13 @@ export function Now() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="now"
-          title="What I'm up to"
+          title="Now"
           lede="A living snapshot — current focus, the learning queue, the road ahead, and the setup it all happens on."
         />
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           <Reveal>
-            <div className="card-shell relative h-full overflow-hidden p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+            <div className="card-shell relative h-full overflow-hidden p-6">
               <ContextualMark
                 kind="mug"
                 className="pointer-events-none absolute -bottom-4 -right-4 h-28 w-28 text-brand2/[0.07]"
@@ -44,7 +44,7 @@ export function Now() {
           </Reveal>
 
           <Reveal delay={0.05}>
-            <div className="card-shell h-full p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+            <div className="card-shell h-full p-6">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
                 <BookOpen size={15} className="text-brand2" aria-hidden="true" />
                 Currently learning
@@ -74,7 +74,7 @@ export function Now() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <div className="card-shell h-full p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+            <div className="card-shell h-full p-6">
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold">
                 <Laptop size={15} className="text-brand" aria-hidden="true" />
                 Uses

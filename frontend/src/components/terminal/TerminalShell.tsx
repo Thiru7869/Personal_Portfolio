@@ -57,8 +57,8 @@ export function TerminalShell({
    *  taskbar click, a title-bar drag, a fresh spawn. */
   focusSignal?: number;
   /** Only supplied inside Terminal mode's desktop — lets `resume`/`projects`
-   *  open a window instead of navigating away. */
-  onOpenWindow?: (kind: "resume" | "files") => void;
+   *  /`game` open a window instead of navigating away. */
+  onOpenWindow?: (kind: "resume" | "files" | "game") => void;
 }) {
   const router = useRouter();
   const { setMode, setAppearance } = useExperience();

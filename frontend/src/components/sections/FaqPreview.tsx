@@ -23,7 +23,7 @@ export function FaqPreview() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="faq"
-          title="Questions People Ask"
+          title="FAQ"
           lede={
             remaining > 0
               ? `The top ${shown}, answered honestly — ${remaining} more on the Q&A page.`
@@ -39,7 +39,7 @@ export function FaqPreview() {
                   {faq.question}
                   <ChevronDown
                     size={16}
-                    className="shrink-0 text-mute transition-transform group-open:rotate-180"
+                    className="shrink-0 text-mute transition-transform duration-300 ease-out group-open:rotate-180"
                     aria-hidden="true"
                   />
                 </summary>
@@ -55,7 +55,7 @@ export function FaqPreview() {
           <Reveal delay={0.3}>
             <Link
               href="/qa"
-              className="card-shell group flex items-center justify-between p-5 text-sm font-semibold transition-colors hover:border-brand/50"
+              className="card-shell group flex items-center justify-between p-5 text-sm font-semibold"
             >
               <span>
                 Browse all {faqs.length} questions — technical, career,

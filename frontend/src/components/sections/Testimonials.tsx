@@ -20,7 +20,7 @@ export function Testimonials() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="testimonials"
-          title="What People Say"
+          title="Testimonials"
           lede={
             hasReal
               ? "From the people I've actually worked with."
@@ -32,7 +32,7 @@ export function Testimonials() {
           <div className="grid gap-5 md:grid-cols-3">
             {genuineTestimonials.map((t, i) => (
               <Reveal key={t.id} delay={i * 0.08}>
-                <figure className="card-shell flex h-full flex-col p-6 transition-all duration-300 hover:border-brand/40">
+                <figure className="card-shell flex h-full flex-col p-6">
                   <Quote size={20} className="mb-4 text-brand" aria-hidden="true" />
                   <blockquote className="flex-1 text-sm leading-relaxed text-ink/90">
                     “{t.quote}”

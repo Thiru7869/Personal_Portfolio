@@ -14,7 +14,7 @@ export function SectionHeading({
   lede?: string;
 }) {
   return (
-    <Reveal className="mb-12">
+    <Reveal variant="blur" className="mb-12">
       <p className="mb-2 font-mono text-sm text-brand">
         <span aria-hidden="true">~/</span>
         {eyebrow}
@@ -22,7 +22,9 @@ export function SectionHeading({
       <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
         {title}
       </h2>
-      {lede ? <p className="mt-3 max-w-2xl text-mute">{lede}</p> : null}
+      {lede ? (
+        <p className="mt-3 max-w-2xl text-pretty leading-relaxed text-mute">{lede}</p>
+      ) : null}
     </Reveal>
   );
 }

@@ -3,30 +3,37 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { POPUP_STORAGE_KEY } from "@shared/constants";
-import { useFocusTrap } from "@/lib/use-focus-trap";
 import { Logo } from "@/components/layout/Logo";
-import { AbstractMesh } from "@/components/illustrations/AbstractMesh";
+import { NodeCanvas } from "@/components/layout/backdrops/NodeCanvas";
 import {
-  BOOT_LINES,
-  BOOT_LINE_INTERVAL_MS,
-  BOOT_HOLD_MS,
-  BOOT_GLITCH_MS,
-  BOOT_POWER_ON_MS,
+  BOOT_STATUS_LINES,
+  BOOT_STATUS_INTERVAL_MS,
+  BOOT_TOTAL_MS,
+  WELCOME_WORDS,
+  WELCOME_WORD_MS,
 } from "@/lib/boot-sequence";
 
 /**
- * BootSequence — the cinematic startup: power-on flicker → terminal
- * boot log → glitch → morse-code logo reveal → on-brand welcome
- * card → Hero. Plays once per browser SESSION (sessionStorage), not
- * on every reload — a "Replay intro" action (footer, command
- * palette) dispatches `replay-boot` to run it again on demand.
+ * BootSequence — the cinematic intro. Two stages, then a dissolve:
+ *
+ *   boot     — the logo draws itself over a live node mesh while
+ *              engineering status lines cycle above a progress bar.
+ *   welcome  — large type crossfades: "Welcome" → "I'm Thiru" →
+ *              role → "Let's explore".
+ *
+ * Plays once per browser SESSION (sessionStorage); "Replay intro"
+ * (footer, command palette) dispatches `replay-boot` to run it
+ * again. Click advances a stage, Esc skips everything, and
+ * prefers-reduced-motion skips the intro entirely — the settled
+ * hero is the reduced-motion experience.
  */
 
-type Stage = "hidden" | "power-on" | "lines" | "glitch" | "logo" | "welcome";
+type Stage = "hidden" | "boot" | "welcome";
 
 export function BootSequence() {
   const [stage, setStage] = useState<Stage>("hidden");
-  const [lineCount, setLineCount] = useState(0);
+  const [statusIndex, setStatusIndex] = useState(0);
+  const [wordIndex, setWordIndex] = useState(0);
   const reduce = useReducedMotion();
   const active = stage !== "hidden";
 
@@ -40,8 +47,18 @@ export function BootSequence() {
   }, []);
 
   const start = useCallback(() => {
-    setLineCount(0);
-    setStage(reduce ? "welcome" : "power-on");
+    if (reduce) {
+      // Reduced motion: no intro — mark seen and show the page.
+      try {
+        sessionStorage.setItem(POPUP_STORAGE_KEY, "1");
+      } catch {
+        // ignore
+      }
+      return;
+    }
+    setStatusIndex(0);
+    setWordIndex(0);
+    setStage("boot");
   }, [reduce]);
 
   // First mount: play once per session.
@@ -63,35 +80,44 @@ export function BootSequence() {
     return () => window.removeEventListener("replay-boot", onReplay);
   }, [start]);
 
-  // Stage auto-advance.
+  // Boot stage: cycle status lines, then hand off to the welcome type.
   useEffect(() => {
-    if (reduce) return;
-    if (stage === "power-on") {
-      const t = setTimeout(() => setStage("lines"), BOOT_POWER_ON_MS);
+    if (stage !== "boot") return;
+    if (statusIndex < BOOT_STATUS_LINES.length - 1) {
+      const t = setTimeout(() => setStatusIndex((i) => i + 1), BOOT_STATUS_INTERVAL_MS);
       return () => clearTimeout(t);
     }
-    if (stage === "lines") {
-      if (lineCount < BOOT_LINES.length) {
-        const t = setTimeout(() => setLineCount((c) => c + 1), BOOT_LINE_INTERVAL_MS);
-        return () => clearTimeout(t);
-      }
-      const t = setTimeout(() => setStage("glitch"), BOOT_HOLD_MS);
+    const t = setTimeout(() => setStage("welcome"), BOOT_STATUS_INTERVAL_MS);
+    return () => clearTimeout(t);
+  }, [stage, statusIndex]);
+
+  // Welcome stage: crossfade through the phrases, then dissolve out.
+  useEffect(() => {
+    if (stage !== "welcome") return;
+    if (wordIndex < WELCOME_WORDS.length - 1) {
+      const t = setTimeout(() => setWordIndex((i) => i + 1), WELCOME_WORD_MS);
       return () => clearTimeout(t);
     }
-    if (stage === "glitch") {
-      const t = setTimeout(() => setStage("logo"), BOOT_GLITCH_MS);
-      return () => clearTimeout(t);
+    const t = setTimeout(dismiss, WELCOME_WORD_MS);
+    return () => clearTimeout(t);
+  }, [stage, wordIndex, dismiss]);
+
+  // Click advances; Esc skips everything.
+  const advance = useCallback(() => {
+    if (stage === "boot") setStage("welcome");
+    else if (stage === "welcome") dismiss();
+  }, [stage, dismiss]);
+
+  useEffect(() => {
+    if (!active) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") dismiss();
     }
-  }, [stage, lineCount, reduce]);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [active, dismiss]);
 
-  const skipToWelcome = useCallback(() => setStage("welcome"), []);
-
-  function startTour() {
-    dismiss();
-    setTimeout(() => window.dispatchEvent(new CustomEvent("start-tour")), 350);
-  }
-
-  // Lock scroll for the whole sequence, not just the welcome card.
+  // Lock scroll while the intro is on screen.
   useEffect(() => {
     if (!active) return;
     const prev = document.body.style.overflow;
@@ -101,107 +127,81 @@ export function BootSequence() {
     };
   }, [active]);
 
-  // Escape skips the animated boot straight to the welcome card.
-  useEffect(() => {
-    if (!active || stage === "welcome") return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") skipToWelcome();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [active, stage, skipToWelcome]);
-
-  const dialogRef = useFocusTrap<HTMLDivElement>(stage === "welcome", dismiss);
-
-  if (!active) return null;
-
   return (
     <AnimatePresence>
-      <motion.div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Portfolio boot sequence"
-        initial={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.5 } }}
-        className="fixed inset-0 z-[100] flex items-center justify-center bg-term p-6"
-        onClick={stage !== "welcome" ? skipToWelcome : undefined}
-      >
-        {(stage === "power-on" || stage === "lines" || stage === "glitch") && (
-          <div
-            className={`w-full max-w-xl font-mono text-sm ${
-              stage === "glitch" ? "animate-glitch" : ""
-            }`}
-          >
-            <p className="boot-text-glow mb-4 animate-boot-glow text-term-accent">
-              THIRU/OS v3.0 — booting…
-            </p>
-            <div aria-live="polite">
-              {BOOT_LINES.slice(0, lineCount).map((line) => (
-                <motion.p
-                  key={line}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="text-term-ink"
-                >
-                  <span className="text-brand2">[ OK ]</span> {line}
-                </motion.p>
-              ))}
-            </div>
-            <p className="mt-6 text-xs text-term-ink/40">click anywhere to skip · esc</p>
+      {active && (
+        <motion.div
+          key="intro"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Portfolio intro"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.03, transition: { duration: 0.6, ease: "easeInOut" } }}
+          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-term p-6"
+          onClick={advance}
+        >
+          {/* Living neural-mesh backdrop, dimmed under the content */}
+          <div className="absolute inset-0 opacity-35" aria-hidden="true">
+            <NodeCanvas variant="mesh" />
           </div>
-        )}
 
-        {stage === "logo" && (
-          <Logo variant="animated" onComplete={() => setStage("welcome")} />
-        )}
+          {stage === "boot" && (
+            <div className="relative flex w-full max-w-sm flex-col items-center">
+              <Logo variant="hero" />
 
-        {stage === "welcome" && (
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md overflow-hidden border border-term-accent/40 bg-term p-6 font-mono text-sm sm:p-7"
-          >
-            <AbstractMesh className="pointer-events-none absolute inset-x-0 top-0 h-24 w-full opacity-30" />
-            <div className="relative">
-              <p className="text-term-accent">$ session --ready</p>
-              <p className="mt-3 text-base font-semibold text-term-ink">
-                Session ready — welcome aboard.
-              </p>
-              <p className="mt-2 leading-relaxed text-term-ink/80">
-                THIRU/OS is fully interactive: a working terminal, an AI
-                assistant, five experience modes, and a live developer
-                dashboard. Estimated exploration: 3–5 minutes.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  onClick={dismiss}
-                  className="border border-term-accent bg-term-accent/10 px-4 py-2 text-xs font-bold text-term-accent transition-all duration-200 hover:bg-term-accent/20 active:scale-[0.98]"
-                >
-                  Start Exploring
-                </button>
-                <button
-                  type="button"
-                  onClick={startTour}
-                  className="border border-line px-4 py-2 text-xs text-term-ink/80 transition-all duration-200 hover:text-term-ink active:scale-[0.98]"
-                >
-                  Quick Tour
-                </button>
-                <button
-                  type="button"
-                  onClick={dismiss}
-                  className="px-2 py-2 text-xs text-term-ink/50 underline-offset-2 transition-all duration-200 hover:text-term-ink/80 hover:underline active:scale-[0.98]"
-                >
-                  Skip
-                </button>
+              {/* Progress bar — paced to the whole boot stage */}
+              <div
+                className="mt-10 h-px w-56 overflow-hidden bg-term-ink/15"
+                role="progressbar"
+                aria-label="Loading portfolio"
+              >
+                <motion.div
+                  className="h-full origin-left bg-term-accent"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: BOOT_TOTAL_MS / 1000, ease: "linear" }}
+                />
+              </div>
+
+              {/* One status line at a time, crossfading */}
+              <div className="mt-4 h-5 font-mono text-xs text-term-ink/70" aria-live="polite">
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={statusIndex}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    {BOOT_STATUS_LINES[statusIndex]}
+                  </motion.p>
+                </AnimatePresence>
               </div>
             </div>
-          </motion.div>
-        )}
-      </motion.div>
+          )}
+
+          {stage === "welcome" && (
+            <div className="relative flex h-24 items-center justify-center" aria-live="polite">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={wordIndex}
+                  initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
+                  transition={{ duration: 0.32, ease: "easeOut" }}
+                  className="boot-text-glow px-4 text-center font-display text-4xl font-bold tracking-tight text-term-ink sm:text-5xl"
+                >
+                  {WELCOME_WORDS[wordIndex]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+          )}
+
+          <p className="absolute bottom-6 left-1/2 -translate-x-1/2 font-mono text-[11px] text-term-ink/35">
+            click to skip · esc
+          </p>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 }

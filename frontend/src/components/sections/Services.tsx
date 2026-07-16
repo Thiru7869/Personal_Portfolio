@@ -37,7 +37,7 @@ export function Services() {
             const Icon = serviceIcons[service.icon] ?? Layers;
             return (
               <Reveal key={service.id} delay={i * 0.07}>
-                <article className="card-shell group h-full p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40 hover:shadow-glow">
+                <article className="card-shell group h-full p-6">
                   <span className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-brand/12 text-brand transition-transform duration-300 group-hover:scale-110">
                     <Icon size={20} aria-hidden="true" />
                   </span>

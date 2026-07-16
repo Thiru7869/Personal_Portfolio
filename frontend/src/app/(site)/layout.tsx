@@ -3,7 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeShell } from "@/components/layout/ThemeShell";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
-import { CustomCursor } from "@/components/layout/CustomCursor";
+import { CardSpotlight } from "@/components/layout/CardSpotlight";
 import { AmbientBackdrop } from "@/components/layout/AmbientBackdrop";
 import { SiteWidgets } from "@/components/widgets/SiteWidgets";
 
@@ -23,7 +23,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       </a>
       <AmbientBackdrop />
       <ScrollProgress />
-      <CustomCursor />
+      <CardSpotlight />
       <Navbar />
       <main id="main-content">{children}</main>
       <Footer />

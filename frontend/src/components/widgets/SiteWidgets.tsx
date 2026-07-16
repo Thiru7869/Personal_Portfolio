@@ -29,6 +29,11 @@ const QuickTour = dynamic(
   { ssr: false }
 );
 
+const GameDialog = dynamic(
+  () => import("@/components/game/GameDialog").then((m) => m.GameDialog),
+  { ssr: false }
+);
+
 export function SiteWidgets() {
   const pathname = usePathname();
 
@@ -43,6 +48,7 @@ export function SiteWidgets() {
       <AiAssistant />
       <CommandPalette />
       <QuickTour />
+      <GameDialog />
     </>
   );
 }

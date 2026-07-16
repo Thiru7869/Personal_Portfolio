@@ -208,7 +208,7 @@ export function Skills() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="skills"
-          title="Things I Know"
+          title="Skills"
           lede="Grouped into orbits, searchable, and honest about levels. Click any skill to read about the technology."
         />
 
@@ -260,7 +260,7 @@ export function Skills() {
             const Icon = groupIcons[group.icon] ?? Code2;
             return (
               <Reveal key={group.id} delay={gi * 0.05}>
-                <div className="card-shell flex h-full flex-col items-center p-6 text-center transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+                <div className="card-shell flex h-full flex-col items-center p-6 text-center">
                   {group.roadmapUrl ? (
                     <a
                       href={group.roadmapUrl}

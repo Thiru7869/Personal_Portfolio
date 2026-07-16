@@ -27,9 +27,10 @@ export interface TerminalContext {
   scrollTo: (sectionId: string) => void;
   openUrl: (url: string) => void;
   history: string[];
-  /** Only present inside Terminal mode's desktop — spawns a Files/Resume
-   *  window instead of navigating away, so the desktop metaphor holds. */
-  openWindow?: (kind: "resume" | "files") => void;
+  /** Only present inside Terminal mode's desktop — spawns a Files/
+   *  Resume/Game window instead of navigating away, so the desktop
+   *  metaphor holds. */
+  openWindow?: (kind: "resume" | "files" | "game") => void;
 }
 
 export interface CommandResult {
@@ -272,7 +273,7 @@ export const COMMANDS: TerminalCommand[] = [
   {
     name: "mode",
     description: "Switch experience mode: mode <name> | mode list",
-    usage: "mode [list|professional|terminal|ai|developer|executive]",
+    usage: "mode [list|professional|terminal|ai|developer]",
     run: (args, ctx) => {
       const raw = (args[0] ?? "list").toLowerCase();
       if (raw === "list") {
@@ -513,6 +514,18 @@ export const COMMANDS: TerminalCommand[] = [
         "tcp    portfolio:443      recruiter:anywhere     LISTENING",
       ],
     }),
+  },
+  {
+    name: "2048",
+    description: "Play 2048 — byte edition",
+    run: (_a, ctx) => {
+      if (ctx.openWindow) {
+        ctx.openWindow("game");
+        return { lines: ["Launching 2048 — merge bytes until 2KB…"], delayMs: 200 };
+      }
+      window.dispatchEvent(new CustomEvent("open-game"));
+      return { lines: ["Launching 2048 — merge bytes until 2KB…"], delayMs: 200 };
+    },
   },
   {
     name: "hire",

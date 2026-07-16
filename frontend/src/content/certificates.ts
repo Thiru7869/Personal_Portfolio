@@ -84,6 +84,6 @@ export const achievements = [
     id: "portfolio",
     title: "Built this portfolio as a product",
     detail:
-      "Five experience modes, terminal mode, AI assistant, CMS, and analytics — all on free tiers.",
+      "Four experience modes, terminal mode, AI assistant, CMS, and analytics — all on free tiers.",
   },
 ];

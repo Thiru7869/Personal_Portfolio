@@ -23,13 +23,13 @@ export function Terminal() {
     <section
       id="terminal"
       aria-label="Interactive terminal"
-      className="section-pad exec-hide"
+      className="section-pad"
     >
       <SectionBackdrop kind="matrix" />
       <div className="section-shell">
         <SectionHeading
           eyebrow="terminal"
-          title="Try the Terminal"
+          title="Terminal"
           lede="A real shell — Tab completes, arrows recall history, sudo works. Type `mode terminal` for the full desktop."
         />
 

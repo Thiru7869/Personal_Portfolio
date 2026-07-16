@@ -21,13 +21,18 @@ interface TourStep {
 const STEPS: TourStep[] = [
   {
     target: "home",
-    title: "Home",
-    body: "The full name is Poluru Thirumala Narasimha. The dock below has resume, appointment booking, and every profile. Top right: the sun/moon toggle and the mode switcher — five complete experiences, not color swaps.",
+    title: "This portfolio is interactive",
+    body: "Scroll to explore, or let this tour walk you through. The dock below holds my resume and every profile; top right switches light/dark and swaps between four complete experience modes.",
+  },
+  {
+    target: "about",
+    title: "The story",
+    body: "Who I am, how I work, and where I'm headed — in my own words. Everything after this section is the proof.",
   },
   {
     target: "projects",
-    title: "Projects, as folders",
-    body: "A Parrot-style file manager. Double-click any folder for the full case study; right-click for demo and source. 'View All Projects' opens the complete page.",
+    title: "Proof of work",
+    body: "Projects presented as a file manager. Double-click any folder for the full case study; right-click for demo and source.",
   },
   {
     target: "terminal",
@@ -35,23 +40,18 @@ const STEPS: TourStep[] = [
     body: "30+ working commands — try `help`, `donut`, or `sudo hire thiru`. Type `mode terminal` and the entire site becomes a desktop with draggable windows.",
   },
   {
-    target: "about",
-    title: "Modes & the story",
-    body: "The mode switcher (top right) also has an AI Workspace — the whole site as a streaming assistant — and a Developer Dashboard of live GitHub/LeetCode widgets. This section holds the story in my own words.",
+    target: "activity",
+    title: "Live, not claimed",
+    body: "GitHub contributions and LeetCode stats, pulled live. The write-ups behind the work live at /blog.",
   },
   {
     target: "faq",
-    title: "AI + Q&A",
-    body: "The floating assistant (bottom right) streams answers grounded in this portfolio. These are the questions people ask most — the full set lives at /qa.",
-  },
-  {
-    target: "activity",
-    title: "Blogs & activity",
-    body: "Live GitHub contributions and LeetCode stats here; ten honest blog posts at /blog — Docker, REST APIs, Git, cloud, continuous learning.",
+    title: "Ask anything",
+    body: "The floating assistant (bottom right) streams answers grounded in this portfolio. The questions people actually ask are answered here — the full set lives at /qa.",
   },
   {
     target: "contact",
-    title: "The important part",
+    title: "Say hello",
     body: "A working contact form, direct channels, and my availability. Messages land in my inbox — I reply within a day.",
   },
 ];

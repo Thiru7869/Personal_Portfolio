@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { site } from "@/config/site";
+import { EASE_OUT } from "@/lib/motion";
 import { scrollToSection } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import { Magnetic } from "@/components/ui/Magnetic";
@@ -62,7 +63,7 @@ export function ActionDock() {
     <motion.div
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.7, duration: 0.5 }}
+      transition={{ delay: 0.7, duration: 0.5, ease: EASE_OUT }}
       role="toolbar"
       aria-label="Quick actions"
       className="glass mx-auto flex w-fit max-w-full flex-wrap items-center justify-center gap-1 rounded-2xl border border-line/80 p-1.5 shadow-card"
@@ -83,8 +84,8 @@ export function ActionDock() {
           </>
         );
         const cls = action.primary
-          ? "flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-bg transition-all hover:brightness-110"
-          : "flex items-center gap-2 rounded-xl px-3 py-2.5 text-mute transition-all hover:-translate-y-0.5 hover:bg-surface hover:text-brand";
+          ? "flex items-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-bg transition-all duration-200 hover:shadow-glow hover:brightness-110 active:scale-[0.97]"
+          : "flex items-center gap-2 rounded-xl px-3 py-2.5 text-mute transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface hover:text-brand active:scale-[0.97] active:translate-y-0";
 
         const element = action.href ? (
           <a

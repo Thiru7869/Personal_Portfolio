@@ -1,4 +1,4 @@
-import { FileText, FolderOpen, TerminalSquare, type LucideIcon } from "lucide-react";
+import { FileText, FolderOpen, Gamepad2, TerminalSquare, type LucideIcon } from "lucide-react";
 
 /**
  * src/components/modes/window-kinds.ts
@@ -7,7 +7,7 @@ import { FileText, FolderOpen, TerminalSquare, type LucideIcon } from "lucide-re
  * a kind here (icon + default size + multi-instance policy) and
  * TerminalDesktop's spawnWindow/render switch pick it up.
  */
-export type WindowKind = "terminal" | "files" | "resume";
+export type WindowKind = "terminal" | "files" | "resume" | "game";
 
 export interface WindowKindConfig {
   kind: WindowKind;
@@ -43,6 +43,14 @@ export const WINDOW_KINDS: Record<WindowKind, WindowKindConfig> = {
     icon: FileText,
     defaultWidth: 620,
     defaultHeight: 720,
+    multiInstance: false,
+  },
+  game: {
+    kind: "game",
+    defaultTitle: "2048 — byte edition",
+    icon: Gamepad2,
+    defaultWidth: 460,
+    defaultHeight: 620,
     multiInstance: false,
   },
 };

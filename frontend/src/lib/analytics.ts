@@ -17,7 +17,8 @@ export type AnalyticsEvent =
   | { type: "contact_submit" }
   | { type: "rating_submit" }
   | { type: "chat_opened" }
-  | { type: "terminal_command"; command: string };
+  | { type: "terminal_command"; command: string }
+  | { type: "game_played" };
 
 export function trackEvent(event: AnalyticsEvent): void {
   try {

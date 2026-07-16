@@ -39,7 +39,7 @@ function StatCard({
   value: number;
 }) {
   return (
-    <div className="card-shell p-5 text-center transition-all duration-300 hover:border-brand/40">
+    <div className="card-shell p-5 text-center">
       <Icon size={18} className="mx-auto mb-2 text-brand" aria-hidden="true" />
       <p className="font-display text-2xl font-bold">{value.toLocaleString()}</p>
       <p className="mt-0.5 text-xs text-mute">{label}</p>
@@ -135,7 +135,7 @@ export function Insights() {
   }, []);
 
   return (
-    <section id="insights" aria-label="Portfolio insights" className="section-pad exec-hide">
+    <section id="insights" aria-label="Portfolio insights" className="section-pad">
       <SectionBackdrop kind="signal" />
       <div className="section-shell">
         <SectionHeading

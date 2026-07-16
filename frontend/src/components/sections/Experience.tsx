@@ -15,7 +15,7 @@ export function Experience() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="experience"
-          title="Where I've worked"
+          title="Experience"
           lede="Internships, freelance clients, and what actually got shipped at each stop."
         />
 
@@ -31,7 +31,7 @@ export function Experience() {
               </span>
 
               <Reveal delay={i * 0.08}>
-                <article className="card-shell p-6 transition-all duration-300 hover:border-brand/40 sm:p-7">
+                <article className="card-shell p-6 sm:p-7">
                   <header className="mb-4 flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <h3 className="font-display text-lg font-semibold">

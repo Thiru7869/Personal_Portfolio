@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Compass, MapPin } from "lucide-react";
 import { site } from "@/config/site";
 import { heroCards, heroTypingLines } from "@/content/profile";
+import { EASE_OUT } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { TechConstellation } from "@/components/hero/TechConstellation";
 import { ActionDock } from "@/components/hero/ActionDock";
@@ -79,7 +80,7 @@ export function Hero() {
         <motion.p
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: EASE_OUT }}
           className="chip mx-auto w-fit !border-brand2/40"
         >
           <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -93,7 +94,7 @@ export function Hero() {
         <motion.p
           initial={reduce ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: EASE_OUT }}
           className="mt-8 text-lg text-mute"
         >
           Hi, I&apos;m
@@ -101,7 +102,7 @@ export function Hero() {
         <motion.h1
           initial={reduce ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
+          transition={{ duration: 0.6, delay: 0.18, ease: EASE_OUT }}
           className="mx-auto mt-2 max-w-3xl font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl"
         >
           Poluru Thirumala{" "}
@@ -111,7 +112,7 @@ export function Hero() {
         <motion.p
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.32 }}
+          transition={{ duration: 0.6, delay: 0.32, ease: EASE_OUT }}
           className="mt-4 h-7 font-mono text-base text-brand sm:text-lg"
           aria-label={`Roles: ${heroTypingLines.join(", ")}`}
         >
@@ -124,7 +125,7 @@ export function Hero() {
         <motion.p
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.42 }}
+          transition={{ duration: 0.6, delay: 0.42, ease: EASE_OUT }}
           className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-mute"
         >
           {site.tagline}
@@ -137,14 +138,12 @@ export function Hero() {
               key={card.label}
               initial={reduce ? false : { opacity: 0, y: 16, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.45, delay: 0.5 + i * 0.07 }}
+              transition={{ duration: 0.45, delay: 0.5 + i * 0.07, ease: EASE_OUT }}
               whileHover={{ y: -4 }}
               className={cn(
                 "card-shell px-4 py-2 text-sm font-medium",
-                !reduce && "animate-float",
                 card.accent ? "!border-brand/40 text-brand" : "text-ink/85"
               )}
-              style={reduce ? undefined : { animationDelay: `${(i % 4) * 1.4}s` }}
             >
               {card.label}
             </motion.span>
@@ -173,7 +172,7 @@ export function Hero() {
       <motion.div
         initial={reduce ? false : { opacity: 0, x: 24 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.7, delay: 0.6 }}
+        transition={{ duration: 0.7, delay: 0.6, ease: EASE_OUT }}
         className="relative z-10 mx-auto mt-12 w-full max-w-xs xl:absolute xl:right-10 xl:top-1/2 xl:mt-0 xl:-translate-y-1/2 2xl:right-24"
       >
         <TiltCard maxTilt={6}>

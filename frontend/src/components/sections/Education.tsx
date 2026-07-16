@@ -15,14 +15,14 @@ export function Education() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="education"
-          title="Where I studied"
+          title="Education"
           lede="The formal part of the journey — the informal part is the rest of this site."
         />
 
         <div className="grid gap-6 md:grid-cols-2">
           {education.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.08}>
-              <article className="card-shell h-full p-7 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+              <article className="card-shell h-full p-7">
                 <div className="mb-4 flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/12 text-brand">
                     <GraduationCap size={20} aria-hidden="true" />

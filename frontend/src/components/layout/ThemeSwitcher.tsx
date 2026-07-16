@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Bot,
-  Briefcase,
   Check,
   Code2,
   LayoutGrid,
@@ -23,7 +22,6 @@ const modeIcons: Record<string, LucideIcon> = {
   terminal: TerminalSquare,
   bot: Bot,
   code: Code2,
-  briefcase: Briefcase,
 };
 
 /**
@@ -57,9 +55,9 @@ export function AppearanceToggle() {
 }
 
 /**
- * ModeSwitcher — dropdown over the five experience modes.
+ * ModeSwitcher — dropdown over the four experience modes.
  * Modes transform the entire site (terminal desktop, AI
- * workspace, developer dashboard, executive presentation).
+ * workspace, developer dashboard).
  */
 export function ModeSwitcher() {
   const { mode, setMode } = useExperience();

@@ -31,7 +31,7 @@ export function Research() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="research"
-          title="Published research"
+          title="Research"
           lede="Where engineering met the scientific method — and both improved."
         />
 

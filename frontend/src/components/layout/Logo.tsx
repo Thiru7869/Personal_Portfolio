@@ -1,76 +1,107 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useEffect } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { site } from "@/config/site";
 
-/** Morse code for T-H-I-R-U, one entry per letter. */
-const MORSE_LETTERS = [
-  { letter: "T", code: "-" },
-  { letter: "H", code: "...." },
-  { letter: "I", code: ".." },
-  { letter: "R", code: ".-." },
-  { letter: "U", code: "..-" },
-] as const;
-
-const LETTER_STEP_MS = 260;
-const SYMBOL_STEP_MS = 90;
-const HOLD_BEFORE_WORDMARK_MS = 450;
+/** Morse for T-H-I-R-U — the mark's crossbar IS the "T" dash; the
+ *  full word survives as a tooltip on the persistent logo. */
+const MORSE_TITLE = `- .... .. .-. ..- — morse for ${site.logo}`;
 
 interface LogoProps {
-  /** "compact" — the persistent navbar wordmark. "animated" — the
-   *  full morse-to-wordmark reveal used once in the boot sequence. */
-  variant?: "compact" | "animated";
-  /** Fires once the animated reveal has finished (compact is a no-op). */
+  /** "mark" — the monogram alone (tight spots). "compact" — monogram
+   *  + wordmark (navbar, footer). "hero" — large self-drawing mark
+   *  with the wordmark beneath, used by the intro loader; fires
+   *  onComplete once settled. */
+  variant?: "mark" | "compact" | "hero";
+  /** Fires when the hero reveal has finished (other variants: no-op). */
   onComplete?: () => void;
   className?: string;
 }
 
 /**
- * Logo — the site's identity mark. Morse code for THIRU
- * (- .... .. .-. ..-) decodes into the wordmark once, in the
- * boot sequence; everywhere else (navbar) it's just the
- * wordmark, with the morse spelled out in a title tooltip.
+ * Mark — the monogram: a "T" drawn from a morse dash (crossbar) and
+ * a stem, finished by a terminal caret that keeps blinking under the
+ * baseline. Strokes draw themselves in via pathLength; inherits
+ * currentColor so each surface (navbar ink, loader green) tints it.
+ */
+function Mark({ size, draw, delay = 0 }: { size: number; draw: boolean; delay?: number }) {
+  return (
+    <svg
+      viewBox="0 0 48 56"
+      width={size}
+      height={Math.round((size * 56) / 48)}
+      fill="none"
+      aria-hidden="true"
+    >
+      {/* Crossbar — the morse dash for "T" */}
+      <motion.path
+        d="M7 9 H41"
+        stroke="currentColor"
+        strokeWidth={6.5}
+        strokeLinecap="round"
+        initial={draw ? { pathLength: 0, opacity: 0 } : false}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 0.5, delay, ease: "easeInOut" }}
+      />
+      {/* Stem */}
+      <motion.path
+        d="M24 9 V38"
+        stroke="currentColor"
+        strokeWidth={6.5}
+        strokeLinecap="round"
+        initial={draw ? { pathLength: 0, opacity: 0 } : false}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 0.45, delay: delay + 0.35, ease: "easeInOut" }}
+      />
+      {/* Terminal caret finishing the letter */}
+      <motion.rect
+        x={19}
+        y={45}
+        width={10}
+        height={9}
+        rx={1.5}
+        fill="currentColor"
+        className="animate-blink"
+        initial={draw ? { opacity: 0 } : false}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2, delay: delay + 0.8 }}
+      />
+    </svg>
+  );
+}
+
+/**
+ * Logo — the site's identity mark, shared by the navbar, footer,
+ * intro loader, and outro. The monogram nods to the old morse
+ * identity (crossbar = the "T" dash) and ends in a blinking caret —
+ * a developer's letterform.
  */
 export function Logo({ variant = "compact", onComplete, className = "" }: LogoProps) {
   const reduce = useReducedMotion();
-  const [revealed, setRevealed] = useState(variant === "compact");
 
   useEffect(() => {
-    if (variant !== "animated") return;
+    if (variant !== "hero") return;
     if (reduce) {
-      setRevealed(true);
       onComplete?.();
       return;
     }
-    const morseDuration = MORSE_LETTERS.length * LETTER_STEP_MS;
-    const t1 = setTimeout(() => setRevealed(true), morseDuration + HOLD_BEFORE_WORDMARK_MS);
-    const t2 = setTimeout(
-      () => onComplete?.(),
-      morseDuration + HOLD_BEFORE_WORDMARK_MS + 900
-    );
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    const t = setTimeout(() => onComplete?.(), 1900);
+    return () => clearTimeout(t);
   }, [variant, reduce, onComplete]);
 
-  if (variant === "compact") {
+  if (variant !== "hero") {
     return (
       <span
-        className={`group flex items-center gap-0.5 font-mono text-sm font-bold tracking-widest text-ink ${className}`}
-        title={`${MORSE_LETTERS.map((m) => m.code).join(" ")} — morse for ${site.logo}`}
+        className={`group flex items-center gap-2 text-ink ${className}`}
+        title={MORSE_TITLE}
       >
-        <motion.span
-          initial={{ opacity: 0, y: -6 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          {site.logo}
-        </motion.span>
-        <span
-          className="h-4 w-[7px] animate-logo-signal bg-brand transition-transform group-hover:scale-y-125"
-          aria-hidden="true"
-        />
+        <span className="text-brand transition-transform duration-200 group-hover:scale-110">
+          <Mark size={variant === "mark" ? 22 : 18} draw={false} />
+        </span>
+        {variant === "compact" && (
+          <span className="font-mono text-sm font-bold tracking-widest">{site.logo}</span>
+        )}
       </span>
     );
   }
@@ -80,50 +111,17 @@ export function Logo({ variant = "compact", onComplete, className = "" }: LogoPr
       className={`flex flex-col items-center text-center ${className}`}
       aria-label={`${site.logo} — ${site.roles[0]}`}
     >
-      <AnimatePresence mode="wait">
-        {!revealed ? (
-          <motion.div
-            key="morse"
-            exit={{ opacity: 0, scale: 0.92 }}
-            transition={{ duration: 0.3 }}
-            className="flex items-center gap-3 font-mono text-2xl tracking-[0.3em] text-term-accent sm:text-3xl"
-          >
-            {MORSE_LETTERS.map((m, li) => (
-              <span key={m.letter} className="flex gap-1.5">
-                {m.code.split("").map((symbol, si) => (
-                  <motion.span
-                    key={`${m.letter}-${si}`}
-                    initial={{ opacity: 0, scale: 0.4 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                      delay: (li * LETTER_STEP_MS + si * SYMBOL_STEP_MS) / 1000,
-                      duration: 0.22,
-                      ease: "easeOut",
-                    }}
-                    className="boot-text-glow inline-block"
-                  >
-                    {symbol}
-                  </motion.span>
-                ))}
-              </span>
-            ))}
-          </motion.div>
-        ) : (
-          <motion.div
-            key="wordmark"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="boot-text-glow font-display text-4xl font-bold tracking-tight text-term-ink sm:text-5xl">
-              {site.logo}
-            </p>
-            <p className="mt-2 font-mono text-xs uppercase tracking-[0.3em] text-term-accent/80">
-              {site.roles[0]}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <span className="mark-glow text-term-accent">
+        <Mark size={64} draw={!reduce} />
+      </span>
+      <motion.p
+        initial={reduce ? false : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: reduce ? 0 : 1.05, duration: 0.5 }}
+        className="boot-text-glow mt-5 font-mono text-2xl font-bold tracking-[0.3em] text-term-ink sm:text-3xl"
+      >
+        {site.logo}
+      </motion.p>
     </div>
   );
 }

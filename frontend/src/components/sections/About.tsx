@@ -51,7 +51,7 @@ export function About() {
           {/* Sidebar: developer snapshot + things I enjoy building */}
           <div className="space-y-5">
             <Reveal delay={0.1}>
-              <aside className="card-shell p-6 font-mono text-sm transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+              <aside className="card-shell p-6 font-mono text-sm">
                 <p className="mb-4 text-xs uppercase tracking-widest text-mute">
                   developer snapshot
                 </p>
@@ -87,7 +87,7 @@ export function About() {
             </Reveal>
 
             <Reveal delay={0.18}>
-              <div className="card-shell relative overflow-hidden p-6 transition-all duration-300 hover:border-brand/40 hover:shadow-glow">
+              <div className="card-shell relative overflow-hidden p-6">
                 <ContextualMark
                   kind="brackets"
                   className="pointer-events-none absolute -bottom-3 -right-3 h-24 w-24 text-brand/[0.07]"

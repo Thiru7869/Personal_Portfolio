@@ -25,6 +25,7 @@ export const SECTION_IDS = [
   "rating",
   "insights",
   "contact",
+  "outro",
 ] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];
@@ -39,7 +40,6 @@ export const MODE_IDS = [
   "terminal",
   "ai",
   "developer",
-  "executive",
 ] as const;
 
 export const APPEARANCE_IDS = ["light", "dark"] as const;

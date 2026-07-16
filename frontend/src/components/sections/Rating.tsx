@@ -215,7 +215,7 @@ export function Rating() {
   const tabStop = activeIndex === -1 ? 0 : activeIndex;
 
   return (
-    <section id="rating" aria-label="Review this portfolio" className="section-pad exec-hide">
+    <section id="rating" aria-label="Review this portfolio" className="section-pad">
       <SectionBackdrop kind="mesh" />
       <div className="section-shell">
         <SectionHeading

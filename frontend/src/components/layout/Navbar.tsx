@@ -3,10 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Download, Menu, X } from "lucide-react";
 import { navItems } from "@/config/navigation";
 import { site } from "@/config/site";
+import { EASE_OUT } from "@/lib/motion";
 import { cn, scrollToSection } from "@/lib/utils";
 import { AppearanceToggle, ModeSwitcher } from "@/components/layout/ThemeSwitcher";
 import { Logo } from "@/components/layout/Logo";
@@ -14,13 +15,17 @@ import { Logo } from "@/components/layout/Logo";
 /**
  * Navbar — minimal sticky navigation: THIRU logo left, links
  * centered, appearance toggle + mode switcher + resume right.
- * Gains a glass blur once scrolled.
+ * Gains a glass blur once scrolled. A scroll-spy highlights the
+ * link whose section is currently centered in the viewport, with
+ * a shared-layout pill gliding between links.
  */
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
   const pathname = usePathname();
   const router = useRouter();
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -32,6 +37,37 @@ export function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
+
+  // Scroll-spy: whichever nav-target section is most centered wins.
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
+    const ids = navItems.filter((i) => !i.target.startsWith("/")).map((i) => i.target);
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => !!el);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveSection(visible.target.id);
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  /** Active state: section links via scroll-spy, page links via path. */
+  function isActive(target: string): boolean {
+    if (target.startsWith("/")) return pathname.startsWith(target);
+    return pathname === "/" && activeSection === target;
+  }
 
   function handleSectionClick(target: string) {
     setMobileOpen(false);
@@ -60,26 +96,49 @@ export function Navbar() {
 
         {/* Center links */}
         <ul className="hidden items-center gap-0.5 lg:flex">
-          {navItems.map((item) => (
-            <li key={item.label}>
-              {item.target.startsWith("/") ? (
-                <Link
-                  href={item.target}
-                  className="rounded-lg px-3 py-2 text-sm text-mute transition-colors hover:text-brand"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => handleSectionClick(item.target)}
-                  className="rounded-lg px-3 py-2 text-sm text-mute transition-colors hover:text-brand"
-                >
-                  {item.label}
-                </button>
-              )}
-            </li>
-          ))}
+          {navItems.map((item) => {
+            const active = isActive(item.target);
+            const linkClass = cn(
+              "relative rounded-lg px-3 py-2 text-sm transition-colors hover:text-brand",
+              active ? "text-brand" : "text-mute"
+            );
+            const pill = active && (
+              <motion.span
+                layoutId="nav-active-pill"
+                transition={
+                  reduce
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 380, damping: 32 }
+                }
+                className="absolute inset-0 -z-10 rounded-lg bg-brand/10"
+                aria-hidden="true"
+              />
+            );
+            return (
+              <li key={item.label}>
+                {item.target.startsWith("/") ? (
+                  <Link
+                    href={item.target}
+                    aria-current={active ? "page" : undefined}
+                    className={linkClass}
+                  >
+                    {pill}
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleSectionClick(item.target)}
+                    aria-current={active ? "true" : undefined}
+                    className={linkClass}
+                  >
+                    {pill}
+                    {item.label}
+                  </button>
+                )}
+              </li>
+            );
+          })}
         </ul>
 
         {/* Right: appearance, mode, resume */}
@@ -113,7 +172,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
             className="glass overflow-hidden border-b border-line/70 lg:hidden"
           >
             <ul className="space-y-1 px-5 py-4">

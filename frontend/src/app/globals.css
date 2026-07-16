@@ -7,7 +7,7 @@
    ------------------------------------------------------------
    data-appearance = light | dark        (sun/moon toggle)
    data-mode       = professional | terminal | ai | developer
-                     | executive         (mode switcher)
+                     (mode switcher)
 
    Appearance owns the luminance scale; modes override structure
    (fonts, radii, spacing) and accent hues. Tailwind's scales
@@ -34,10 +34,6 @@
   --c-term-ink: 201 245 210;
   --c-term-accent: 34 197 94;
 
-  /* Cursor glow accent — overridden per-section by CustomCursor via JS;
-     defaults to the active brand color so it never looks unstyled. */
-  --c-cursor-accent: var(--c-brand);
-
   --ff-body: var(--font-sans);
   --ff-head: var(--font-sans);
   --track-head: -0.03em;
@@ -51,6 +47,9 @@
      diffused — a "premium stationery" feel rather than a hard drop
      shadow, so cards read as elevated without looking busy. */
   --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 14px 32px -16px rgb(16 24 40 / 0.12);
+  /* Hover: the shadow deepens as the card lifts, so elevation and
+     lighting stay physically coherent. */
+  --shadow-card-hover: 0 2px 4px rgb(16 24 40 / 0.05), 0 22px 44px -16px rgb(16 24 40 / 0.16);
   --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.16), 0 10px 32px -10px rgb(var(--c-brand) / 0.18);
   --section-pad: 6.5rem;
   --hover-lift: -3px;
@@ -72,6 +71,7 @@
   --c-term-accent: 0 255 65;
 
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.45), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --shadow-card-hover: 0 2px 4px rgb(0 0 0 / 0.5), 0 14px 36px -12px rgb(0 0 0 / 0.6);
   --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.28), 0 8px 32px -8px rgb(var(--c-brand) / 0.28);
   color-scheme: dark;
 }
@@ -125,8 +125,10 @@
   --c-line: 190 196 203;
   --c-brand: 19 116 56; /* darkened from 21/128/61 for AA text contrast (4.5:1) */
   --c-brand2: 29 78 216;
-  /* Crisp, minimal blur — a monitor-glass edge, not a soft drop shadow. */
+  /* Crisp, minimal blur — a monitor-glass edge, not a soft drop shadow.
+     No hover deepening: grounded chrome doesn't cast a float shadow. */
   --shadow-card: 0 1px 0 rgb(19 116 56 / 0.12), 0 1px 3px rgb(16 24 40 / 0.08);
+  --shadow-card-hover: 0 1px 0 rgb(19 116 56 / 0.2), 0 1px 3px rgb(16 24 40 / 0.08);
   --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.35), 0 0 0 3px rgb(var(--c-brand) / 0.08);
 }
 [data-mode="terminal"][data-appearance="dark"] {
@@ -139,6 +141,8 @@
   --c-brand: 0 255 65;
   --c-brand2: 74 222 128;
   --shadow-card: 0 0 0 1px rgb(0 255 65 / 0.08), 0 1px 4px rgb(0 0 0 / 0.6);
+  /* Hover: the phosphor outline brightens instead of a float shadow. */
+  --shadow-card-hover: 0 0 0 1px rgb(0 255 65 / 0.2), 0 1px 4px rgb(0 0 0 / 0.6);
   --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.45), 0 0 12px rgb(var(--c-brand) / 0.25);
 }
 
@@ -159,12 +163,14 @@
   --c-brand2: 13 130 102; /* darkened from 16/163/127 for AA text contrast (4.5:1) */
   /* Soft, large-radius bloom — dreamy rather than sharp-edged. */
   --shadow-card: 0 2px 6px rgb(107 92 236 / 0.06), 0 24px 48px -20px rgb(107 92 236 / 0.22);
+  --shadow-card-hover: 0 4px 10px rgb(107 92 236 / 0.08), 0 32px 60px -20px rgb(107 92 236 / 0.3);
   --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.14), 0 20px 44px -12px rgb(var(--c-brand) / 0.32);
 }
 [data-mode="ai"][data-appearance="dark"] {
   --c-brand: 148 134 255;
   --c-brand2: 52 211 153;
   --shadow-card: 0 2px 8px rgb(0 0 0 / 0.5), 0 26px 52px -18px rgb(148 134 255 / 0.28);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.55), 0 34px 64px -18px rgb(148 134 255 / 0.36);
   --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.3), 0 22px 48px -12px rgb(var(--c-brand) / 0.4);
 }
 
@@ -177,6 +183,7 @@
   --r-lg: 8px;
   --r-xl: 10px;
   --shadow-card: 0 0 transparent;
+  --shadow-card-hover: 0 0 transparent;
   /* Crisp, near-instant — an IDE panel snapping into focus. */
   --hover-lift: -1px;
   --card-speed: 0.15s;
@@ -199,47 +206,6 @@
   --c-brand2: 63 185 80;
 }
 
-/* ---------- Mode: EXECUTIVE ---------- */
-/* Warm ivory · graphite · forest green · champagne gold. Deliberately
-   neon-free — natural shadows and a print-ready, presentation palette. */
-[data-mode="executive"] {
-  --ff-head: var(--font-serif);
-  --track-head: -0.015em;
-  --r-sm: 4px;
-  --r-md: 6px;
-  --r-lg: 8px;
-  --r-xl: 12px;
-  --section-pad: 8rem;
-  /* Presentation mode is still, on purpose — nothing bobs under
-     the cursor; only the border/shadow read shifts on hover. */
-  --hover-lift: 0px;
-  --card-speed: 0.3s;
-}
-[data-mode="executive"][data-appearance="light"] {
-  --c-bg: 250 248 243; /* warm ivory */
-  --c-surface: 244 240 231; /* warm paper */
-  --c-card: 255 254 250;
-  --c-line: 224 216 199; /* soft warm rule */
-  --c-ink: 41 38 34; /* graphite */
-  --c-mute: 111 103 91;
-  --c-brand: 140 108 52; /* bronze gold — darkened from the initial pick for AA contrast on ivory (4.6:1) */
-  --c-brand2: 40 88 66; /* forest green */
-  --shadow-card: 0 1px 2px rgb(64 52 28 / 0.06), 0 10px 28px -14px rgb(64 52 28 / 0.16);
-  --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.16), 0 10px 26px -10px rgb(var(--c-brand) / 0.18);
-}
-[data-mode="executive"][data-appearance="dark"] {
-  --c-bg: 23 21 18; /* graphite ink */
-  --c-surface: 30 27 23;
-  --c-card: 35 32 27;
-  --c-line: 60 54 45;
-  --c-ink: 237 230 216; /* warm ivory */
-  --c-mute: 171 161 144;
-  --c-brand: 205 172 108; /* champagne gold */
-  --c-brand2: 97 148 118; /* forest green */
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px -14px rgb(0 0 0 / 0.5);
-  --shadow-glow: 0 0 0 1px rgb(var(--c-brand) / 0.2), 0 10px 30px -10px rgb(var(--c-brand) / 0.2);
-}
-
 /* ============================================================
    BASE
    ============================================================ */
@@ -250,6 +216,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Anchor/hash navigation lands clear of the fixed 64px navbar. */
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -264,6 +232,13 @@ h2,
 h3,
 .font-display {
   letter-spacing: var(--track-head);
+}
+
+/* Headlines never orphan a single word onto their last line. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 /* Smooth full-page morph while switching mode/appearance */
@@ -326,6 +301,7 @@ html.theme-switching body * {
   }
 
   .card-shell {
+    position: relative;
     background-color: rgb(var(--c-card));
     border: var(--border-w) solid rgb(var(--c-line) / 0.8);
     border-radius: var(--r-lg);
@@ -343,12 +319,15 @@ html.theme-switching body * {
   }
 
   /* One hover interaction, five personalities: each mode sets
-     --hover-lift (how far a card floats toward the cursor) and
-     --card-speed (above) instead of every component hard-coding its
-     own translate-y utility. :not(form) keeps the contact form still
-     while it's being filled in. */
+     --hover-lift (how far a card floats toward the cursor),
+     --card-speed (above), and --shadow-card-hover (depth grows with
+     elevation) instead of every component hard-coding its own
+     translate-y/border/shadow utilities. :not(form) keeps the
+     contact form still while it's being filled in. */
   .card-shell:not(form):hover {
     transform: translateY(var(--hover-lift, -2px));
+    border-color: rgb(var(--c-brand) / 0.4);
+    box-shadow: var(--shadow-card-hover, var(--shadow-card));
   }
 
   .chip {
@@ -360,6 +339,8 @@ html.theme-switching body * {
 
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 active:scale-[0.98];
+    position: relative;
+    overflow: hidden;
     background-color: rgb(var(--c-brand));
     color: rgb(var(--c-bg));
     border-radius: var(--r-md);
@@ -367,6 +348,24 @@ html.theme-switching body * {
   .btn-primary:hover {
     box-shadow: var(--shadow-glow);
     filter: brightness(1.05);
+  }
+  /* Sheen sweep — one light pass across the primary CTA on hover. */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform: translateX(-130%) skewX(-15deg);
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgb(255 255 255 / 0.28) 50%,
+      transparent 60%
+    );
+  }
+  .btn-primary:hover::after {
+    transform: translateX(130%);
+    transition: transform 0.65s ease;
   }
 
   .btn-ghost {
@@ -379,6 +378,7 @@ html.theme-switching body * {
   .btn-ghost:hover {
     border-color: rgb(var(--c-brand) / 0.6);
     color: rgb(var(--c-brand));
+    background-color: rgb(var(--c-brand) / 0.06);
   }
 
   .gradient-text {
@@ -388,12 +388,60 @@ html.theme-switching body * {
     color: transparent;
   }
 
-  /* Glass surfaces (nav on scroll, action dock) */
+  /* Glass surfaces (nav on scroll, action dock) — a saturation
+     boost makes colors bleed through the blur like real frosted
+     glass, and a hairline top highlight catches the light. */
   .glass {
-    background-color: rgb(var(--c-bg) / 0.72);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background-color: rgb(var(--c-bg) / 0.7);
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
   }
+
+  /* Underline that draws itself left-to-right on hover. */
+  .link-draw {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.3s ease;
+  }
+  .link-draw:hover,
+  .link-draw:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* Spotlight — a soft radial highlight that follows the pointer
+   across any .card-shell (CardSpotlight sets --spot-x/--spot-y via
+   one delegated listener). Fine pointers only; opacity-only fade. */
+@media (pointer: fine) {
+  .card-shell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      200px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgb(var(--c-brand) / 0.09),
+      transparent 70%
+    );
+  }
+  .card-shell:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Form focus — a calm glow ring on top of the standard outline. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: 0 0 0 4px rgb(var(--c-brand) / 0.12);
+  border-color: rgb(var(--c-brand) / 0.5);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 /* Terminal mode: square chips, CLI-flavoured buttons */
@@ -439,20 +487,6 @@ html.theme-switching body * {
 [data-mode="ai"] .scroll-progress-bar {
   height: 3px;
   box-shadow: 0 0 10px rgb(var(--c-brand) / 0.55);
-}
-[data-mode="executive"] .scroll-progress-bar {
-  height: 1px;
-  opacity: 0.7;
-}
-
-/* Executive mode: presentation focus — hide playful chrome */
-[data-mode="executive"] .exec-hide {
-  display: none !important;
-}
-[data-mode="executive"] h1,
-[data-mode="executive"] h2,
-[data-mode="executive"] h3 {
-  font-weight: 600;
 }
 
 /* ============================================================
@@ -603,40 +637,6 @@ html.theme-switching body * {
   animation: blink 1.06s step-end infinite;
 }
 
-/* Minimal cursor dot (CustomCursor component) */
-.cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 120;
-  width: 8px;
-  height: 8px;
-  margin: -4px 0 0 -4px;
-  border-radius: 50%;
-  background: rgb(var(--c-cursor-accent));
-  pointer-events: none;
-  transition:
-    transform 0.15s cubic-bezier(0.2, 0.8, 0.3, 1),
-    opacity 0.25s ease,
-    background-color 0.4s ease;
-}
-
-/* Soft, slower-trailing glow halo — tinted per-section (CustomCursor) */
-.cursor-halo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 119;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgb(var(--c-cursor-accent) / 0.32), transparent 72%);
-  filter: blur(1px);
-  pointer-events: none;
-  transition: opacity 0.35s ease, background-color 0.4s ease;
-}
-
 /* Ambient backdrop host (AmbientBackdrop component) */
 .ambient-host {
   position: fixed;
@@ -653,6 +653,11 @@ html.theme-switching body * {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+}
+
+/* Logo monogram glow (SVG strokes need drop-shadow, not text-shadow) */
+.mark-glow {
+  filter: drop-shadow(0 0 7px rgb(var(--c-term-accent) / 0.55));
 }
 
 /* Boot sequence — terminal glow text (BootSequence component) */
@@ -693,10 +698,11 @@ html.theme-switching body * {
   animation: signal-flow 3.5s linear infinite;
 }
 
-/* Focus mode: hush the ambience */
-html[data-focus="true"] .ambient-host,
-html[data-focus="true"] .cursor-dot,
-html[data-focus="true"] .cursor-halo {
+/* Focus mode: hush the ambience — fading out, not snapping off */
+.ambient-host {
+  transition: opacity 0.6s ease;
+}
+html[data-focus="true"] .ambient-host {
   opacity: 0;
 }
 
@@ -715,10 +721,6 @@ html[data-focus="true"] .cursor-halo {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .cursor-dot,
-  .cursor-halo {
-    display: none;
-  }
 }
 
 @media (prefers-contrast: more) {
@@ -732,11 +734,15 @@ html[data-focus="true"] .cursor-halo {
   }
 }
 
+/* Print: recruiter-friendly, ink-on-white (replaces the retired
+   Executive mode's print-ready role). Chrome, backdrops, and
+   floating widgets vanish; content lays out compactly. */
 @media print {
   .ambient-host,
-  .cursor-dot,
-  .cursor-halo,
+  .section-backdrop-host,
+  .scroll-progress-bar,
   nav,
+  header,
   footer,
   .print-hide {
     display: none !important;
@@ -744,6 +750,10 @@ html[data-focus="true"] .cursor-halo {
   body {
     background: white;
     color: black;
+  }
+  .card-shell {
+    box-shadow: none;
+    border-color: rgb(0 0 0 / 0.2);
   }
   .section-pad {
     padding-block: 1.5rem;

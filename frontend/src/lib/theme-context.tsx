@@ -22,7 +22,7 @@ import { DEFAULT_APPEARANCE, DEFAULT_MODE } from "@/config/modes";
  * src/lib/theme-context.tsx
  * ------------------------------------------------------------
  * Owns the two experience axes:
- *   data-mode        — professional | terminal | ai | developer | executive
+ *   data-mode        — professional | terminal | ai | developer
  *   data-appearance  — light | dark
  * Both persist to localStorage; an inline script (below) applies
  * them before first paint so there is never a flash.

@@ -44,7 +44,7 @@ export function ProjectsGrid() {
           return (
             <Reveal key={project.slug} delay={(i % 3) * 0.07}>
               <TiltCard maxTilt={4} className="h-full">
-                <article className="card-shell group flex h-full flex-col p-6 transition-all duration-300 hover:border-brand/50 hover:shadow-glow">
+                <article className="card-shell group flex h-full flex-col p-6">
                   <div className="mb-4 flex items-start justify-between">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/12 text-brand transition-transform duration-300 group-hover:scale-110">
                       <Icon size={20} aria-hidden="true" />

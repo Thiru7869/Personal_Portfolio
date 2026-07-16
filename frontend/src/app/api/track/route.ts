@@ -19,6 +19,7 @@ const eventSchema = z.object({
     "rating_submit",
     "chat_opened",
     "terminal_command",
+    "game_played",
   ]),
   path: z.string().max(200).optional(),
   slug: z.string().max(100).optional(),

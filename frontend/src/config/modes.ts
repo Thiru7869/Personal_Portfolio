@@ -3,7 +3,7 @@ import type { ModeDefinition } from "@shared/types";
 /**
  * src/config/modes.ts
  * ------------------------------------------------------------
- * Registry of the five experience modes. Structural tokens
+ * Registry of the four experience modes. Structural tokens
  * (fonts, radii, spacing, accents) live in src/app/globals.css
  * under [data-mode] blocks; takeover modes render their own
  * shells via components/layout/ThemeShell.tsx.
@@ -38,13 +38,6 @@ export const modes: ModeDefinition[] = [
     tagline: "Widgets, stats, and activity — editor style",
     icon: "code",
     takeover: true,
-  },
-  {
-    id: "executive",
-    label: "Executive",
-    tagline: "Minimal, recruiter-friendly, print-ready",
-    icon: "briefcase",
-    takeover: false,
   },
 ];
 

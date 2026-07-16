@@ -1,30 +1,39 @@
+import { site } from "@/config/site";
+
 /**
  * src/lib/boot-sequence.ts
  * ------------------------------------------------------------
- * Content + timing for the cinematic boot sequence
+ * Content + timing for the cinematic intro loader
  * (components/boot/BootSequence.tsx). Kept separate so the copy
  * and pacing can be tuned without touching animation logic.
+ *
+ * Structure: a "boot" stage (the logo draws itself over a live
+ * node mesh while status lines cycle above a progress bar), then
+ * a "welcome" stage (large type crossfades through a short
+ * greeting) that dissolves into the hero.
  */
 
-export const BOOT_LINES = [
-  "Initializing Portfolio…",
-  "Loading Components…",
-  "Loading Experience Engine…",
-  "Loading Projects…",
-  "Loading Developer Dashboard…",
-  "Connecting to GitHub…",
-  "Loading AI Assistant…",
-  "Loading Blogs…",
-  "Loading Animations…",
-  "Optimizing UI…",
-  "Portfolio Ready ✓",
+/** Engineering-flavoured status lines cycled during the boot stage. */
+export const BOOT_STATUS_LINES = [
+  "compiling experience…",
+  "hydrating components…",
+  "linking neural pathways…",
+  "ready.",
 ] as const;
 
-/** ms between each boot line appearing. */
-export const BOOT_LINE_INTERVAL_MS = 220;
-/** ms the completed log holds before the glitch transition. */
-export const BOOT_HOLD_MS = 450;
-/** ms the glitch flash plays before the logo reveal. */
-export const BOOT_GLITCH_MS = 380;
-/** ms the "power on" flicker plays before lines start. */
-export const BOOT_POWER_ON_MS = 350;
+/** ms each status line holds before the next crossfades in. */
+export const BOOT_STATUS_INTERVAL_MS = 520;
+
+/** Total boot-stage length — drives the progress bar too. */
+export const BOOT_TOTAL_MS = BOOT_STATUS_LINES.length * BOOT_STATUS_INTERVAL_MS;
+
+/** The welcome sequence — large type, one phrase at a time. */
+export const WELCOME_WORDS = [
+  "Welcome",
+  `I'm ${site.shortName}`,
+  site.roles[0],
+  "Let's explore",
+] as const;
+
+/** ms each welcome phrase holds on screen. */
+export const WELCOME_WORD_MS = 850;

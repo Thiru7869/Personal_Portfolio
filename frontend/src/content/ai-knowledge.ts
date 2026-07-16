@@ -25,7 +25,7 @@ const EXTRA_KNOWLEDGE = `
 - Thiru's daily setup: Parrot OS (Linux), VS Code, a heavily aliased bash terminal, and filter coffee.
 - Preferred stack: React/Next.js + TypeScript + Tailwind on the frontend; Python/FastAPI (or Node.js) on the backend; PostgreSQL first, MongoDB when document-shaped.
 - He is open to full-time roles, internships, freelance projects, and remote work. Fastest contact: the site's form or ${site.email}; phone/WhatsApp ${site.phone}.
-- This portfolio is itself one of his projects: five experience modes (try 'mode terminal' — the whole site becomes a Parrot-style desktop), a separate light/dark toggle, a Ctrl+K command palette, a guided tour, and this assistant with a streaming Gemini → Groq → OpenRouter fallback chain.
+- This portfolio is itself one of his projects: four experience modes (try 'mode terminal' — the whole site becomes a Parrot-style desktop), a separate light/dark toggle, a Ctrl+K command palette, a guided tour, and this assistant with a streaming Gemini → Groq → OpenRouter fallback chain.
 - His LeetCode practice is pattern-based and ongoing (leetcode.com/u/${site.leetcodeUsername}).
 `;
 
@@ -132,7 +132,7 @@ Setup: ${uses.map((u) => `${u.category}: ${u.items}`).join(" | ")}`);
   );
 
   parts.push(
-    `## SITE MAP\nSingle-page sections: ${SECTION_IDS.join(", ")}. Separate pages: /blog, /qa. Five experience modes (professional, terminal desktop, AI workspace, developer dashboard, executive) with a separate light/dark toggle. Ctrl+K opens the command palette; "Take a Tour" runs a guided walkthrough.`
+    `## SITE MAP\nSingle-page sections: ${SECTION_IDS.join(", ")}. Separate pages: /blog, /qa. Four experience modes (professional, terminal desktop, AI workspace, developer dashboard) with a separate light/dark toggle. Ctrl+K opens the command palette; "Take a Tour" runs a guided walkthrough.`
   );
 
   parts.push(`## EXTRA FACTS${EXTRA_KNOWLEDGE}`);

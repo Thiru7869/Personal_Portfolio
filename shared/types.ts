@@ -11,12 +11,7 @@
  */
 
 /** Experience modes — each transforms the whole site. */
-export type ModeId =
-  | "professional"
-  | "terminal"
-  | "ai"
-  | "developer"
-  | "executive";
+export type ModeId = "professional" | "terminal" | "ai" | "developer";
 
 /** Light/dark rendering of the active mode. */
 export type Appearance = "light" | "dark";
@@ -67,6 +62,9 @@ export interface Project {
   github?: string;
   liveDemo?: string;
   caseStudy?: string;
+  /** Optional screenshot/diagram gallery (public paths or CDN URLs).
+   *  The case-study modal renders a gallery row only when present. */
+  images?: string[];
   featured: boolean;
   year: number;
   /** Accent emoji/icon key rendered on the card. */

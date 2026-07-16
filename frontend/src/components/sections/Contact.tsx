@@ -79,7 +79,7 @@ export function Contact() {
       <div className="section-shell">
         <SectionHeading
           eyebrow="contact"
-          title="Let's Talk"
+          title="Contact"
           lede="Role, project, collaboration, or a question about the research — every message lands in my inbox."
         />
 
@@ -220,7 +220,7 @@ export function Contact() {
                           href={s.href}
                           target={s.href.startsWith("http") ? "_blank" : undefined}
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2.5 rounded-xl border border-line bg-surface/50 px-3.5 py-3 transition-all hover:-translate-y-0.5 hover:border-brand/50"
+                          className="flex items-center gap-2.5 rounded-xl border border-line bg-surface/50 px-3.5 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/50 hover:bg-surface active:translate-y-0"
                         >
                           <Icon size={16} className="shrink-0 text-brand" aria-hidden="true" />
                           <span className="min-w-0">
@@ -253,7 +253,7 @@ export function Contact() {
                   title={`Map of ${site.location}`}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="h-56 w-full border-0 grayscale-[0.4] contrast-[0.9]"
+                  className="h-56 w-full border-0 grayscale-[0.4] contrast-[0.9] transition-[filter] duration-500 hover:grayscale-0"
                 />
                 <p className="flex items-center gap-1.5 px-5 py-3 text-xs text-mute">
                   <MapPin size={12} className="text-brand" aria-hidden="true" />
